@@ -1,0 +1,81 @@
+import groovy.json.JsonSlurper
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.0.5'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id 'application'
+}
+
+group = 'com.tourwhere'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+def env = new JsonSlurper().parse(new File('env.json'))
+
+// env 변수를 사용하여 데이터베이스 연결 정보를 가져올 수 있습니다.
+def DB_URL = env.DB_URL
+def DB_USERNAME = env.DB_USERNAME
+def DB_PASSWORD = env.DB_PASSWORD
+def DB_NAME = env.DB_NAME
+def WEATHER_SHORT_SERVICE_KEY = env.WEATHER_SHORT_SERVICE_KEY
+def WEATHER_MID_SERVICE_KEY = env.WEATHER_MID_SERVICE_KEY
+
+// application plugin에서 사용하는 설정
+run {
+	// database.name 프로퍼티를 ${DB_NAME}의 값으로 설정
+	systemProperty 'DB_NAME', DB_NAME
+	systemProperty 'DB_URL', DB_URL
+	systemProperty 'DB_USERNAME', DB_USERNAME
+	systemProperty 'DB_PASSWORD', DB_PASSWORD
+}
+dependencies {
+	// m1 mac issue
+	implementation 'io.netty:netty-resolver-dns-native-macos:4.1.72.Final:osx-aarch_64'
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+	implementation 'org.codehaus.groovy:groovy-json:2.5.14'
+	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.0.4'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.4'
+
+	runtimeOnly 'org.postgresql:postgresql'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+
+	implementation 'org.postgresql:postgresql:42.5.4'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.0'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.0.4'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+
+	// database.name 프로퍼티를 ${DB_NAME}의 값으로 설정
+	systemProperty 'DB_NAME', DB_NAME
+	systemProperty 'DB_URL', DB_URL
+	systemProperty 'DB_USERNAME', DB_USERNAME
+	systemProperty 'DB_PASSWORD', DB_PASSWORD
+	systemProperty 'WEATHER_SHORT_SERVICE_KEY', WEATHER_SHORT_SERVICE_KEY
+	systemProperty 'WEATHER_MID_SERVICE_KEY', WEATHER_MID_SERVICE_KEY
+}
+
+configurations {
+	all {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	}
+}

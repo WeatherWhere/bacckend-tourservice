@@ -122,8 +122,8 @@ public class WeatherAirDataServiceImpl implements WeatherAirDataSerivce {
     // 대기, 날씨 합친 데이터
     @Override
     public List<WeatherAirDataDTO> updateWeatherAirData(String regionCode, LocalDate date) {
+        List<WeatherAirDataDTO> list=new ArrayList<>();
         try{
-            List<WeatherAirDataDTO> list=new ArrayList<>();
             for(int i=0; i<6; i++){
                 LocalDate searchDate=date.plusDays(i);// 호출한 LocalDate 객체에 일(day)이 더해진 LocalDate 객체를 반환합니다.
                 WeatherMidDTO weatherMidDTO=getWeatherMid(regionCode,searchDate);
@@ -146,19 +146,14 @@ public class WeatherAirDataServiceImpl implements WeatherAirDataSerivce {
                 log.info("날씨, 대기 데이터: {}",dto);
                 list.add(dto);
             }
-            return list;
-        }catch (ParseException e){
+        } catch (ParseException e){
             // json 데이터 파싱할 때 error
             e.printStackTrace();
             log.error("ParseException이 발생");
-            //return ResultDTO.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "ParseException이 발생했습니다.", null);
-            // 수정해야함
-            return null;
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             log.error("예기치 못한 에러가 발생");
-           // return ResultDto.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "예기치 못한 에러가 발생했습니다.", null);
-            return null;
         }
+        return list;
     }
 }

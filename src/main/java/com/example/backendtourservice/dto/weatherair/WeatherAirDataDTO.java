@@ -1,20 +1,21 @@
 package com.example.backendtourservice.dto.weatherair;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
 public class WeatherAirDataDTO {
     private String regionCode;
     private LocalDate baseTime;
+    private String forecast;
+    private String reliability;
     private String regionName;
     private String city;
     private Long tmn;
@@ -23,7 +24,4 @@ public class WeatherAirDataDTO {
     private Long rPm;
     private String wAm;
     private String wPm;
-    private String forecast;
-    private String reliability;
-
 }

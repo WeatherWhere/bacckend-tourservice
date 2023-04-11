@@ -74,7 +74,7 @@ jobs:
           ls
           echo "BEFORE sed............"
           cat tourservice/deploy.yml
-          sed -i.bak -E 's|image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG_PREFIX }}[0-9]+|image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG_PREFIX }}${{github.run_number}}|g' airservice/deploy.yml
+          sed -i.bak -E 's|image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG_PREFIX }}[0-9]+|image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG_PREFIX }}${{github.run_number}}|g' tourservice/deploy.yml
           echo "AFTER sed............"
           cat tourservice/deploy.yml
 

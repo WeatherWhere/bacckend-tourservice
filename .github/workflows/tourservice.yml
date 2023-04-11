@@ -74,18 +74,9 @@ jobs:
           ls
           echo "BEFORE sed............"
           cat tourservice/deploy.yml
-          sed -i.bak -E 's|image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG_PREFIX }}[0-9]+|image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG_PREFIX }}${{github.run_number}}|g' tourservice/deploy.yml
+          sed -i.baks -E 's|image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG_PREFIX }}[0-9]+|image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG_PREFIX }}${{github.run_number}}|g' tourservice/deploy.yml
           echo "AFTER sed............"
           cat tourservice/deploy.yml
-
-      - name: Check .bak file existence
-        run: |
-          cd tourservice
-          if [ -e "*.bak" ]; then
-            echo ".bak file exists"
-          else
-            echo ".bak file does not exist"
-          fi    
 
       - name: Commit changes
         run: |

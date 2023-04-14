@@ -1,19 +1,16 @@
 package com.example.backendtourservice.service.weatherair;
 
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.json.simple.parser.ParseException;
-
 import com.example.backendtourservice.domain.weatherair.WeatherAirDataCompositeKey;
 import com.example.backendtourservice.domain.weatherair.WeatherAirDataEntity;
+import com.example.backendtourservice.dto.ResultDTO;
+import com.example.backendtourservice.dto.weatherair.WeatherAirCompositeKeyDTO;
 import com.example.backendtourservice.dto.weatherair.WeatherAirDataDTO;
 
-public interface WeatherAirDataSerivce {
-    List<WeatherAirDataDTO> updateWeatherAirData(String regionCode, LocalDate date) throws
-        ParseException,
-        URISyntaxException;
+public interface WeatherAirDataService {
+    ResultDTO<List<WeatherAirCompositeKeyDTO>> updateRankData(LocalDate date);
 
     default WeatherAirDataEntity dtoToEntity(WeatherAirDataDTO dto){
         WeatherAirDataCompositeKey weatherAirDataCompositeKey=new WeatherAirDataCompositeKey(dto.getRegionCode(),dto.getBaseTime());

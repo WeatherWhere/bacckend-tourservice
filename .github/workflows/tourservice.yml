@@ -1,0 +1,84 @@
+name: Java CI with Gradle, Build and Push Docker Image to ECR and commit to backend-kubernetes
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  AWS_REGION: ap-northeast-2             # set this to your preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: tourservice         # set this to your Amazon ECR repository name
+  ECR_REGISTRY: public.ecr.aws/a5p8o7q9
+  SSH_USERNAME: ubuntu
+  IMAGE_TAG_PREFIX: v
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    # Ref: https://github.com/gradle/gradle-build-action
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      # https://github.com/marketplace/actions/import-gpg
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v3
+        with:
+          gpg-private-key: ${{ secrets.GIT_SECRET_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Reveal Git-Secret
+        run: |
+          sudo apt-get install git-secret -y
+          git-secret reveal -fp ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Execute Gradle build
+        run: ./gradlew build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+          docker build -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG_PREFIX }}${{github.run_number}} -f Dockerfile .
+          docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG_PREFIX }}${{github.run_number}}
+          echo "image=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG_PREFIX }}${{github.run_number}}" >> $GITHUB_OUTPUT
+
+      - name: Checkout Kubernetes YAML
+        uses: actions/checkout@v3
+        with:
+          repository: 'weatherwhere/backend-kubernetes'
+          ref: 'main'
+          token: ${{ secrets.ACTION_TOKEN }}
+
+      - name: Update Kubernetes YAML
+        run: |
+          sed -i.bak -E 's|image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG_PREFIX }}[0-9]+|image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG_PREFIX }}${{github.run_number}}|g' tourservice/deploy.yml
+
+      - name: Commit changes
+        run: |
+          ls
+          cat tourservice/deploy.yml
+          git config --global user.name "hwang-jubin"
+          git config --global user.email "hjb06288@gmail.com"
+          git add tourservice/deploy.yml
+          git commit -m "tourserivce: Auto-commit new image tag - ${{ env.IMAGE_TAG_PREFIX }}${{github.run_number}}"
+          git push origin main

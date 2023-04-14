@@ -5,17 +5,13 @@ import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
-public class AirForecastDTO {
-    private LocalDate baseDate;
-    private String city;
-    private String forecast;
-    private String reliability;
+public class WeatherAirCompositeKeyDTO {
+    private String regionCode;
+    private LocalDate baseTime;
 }

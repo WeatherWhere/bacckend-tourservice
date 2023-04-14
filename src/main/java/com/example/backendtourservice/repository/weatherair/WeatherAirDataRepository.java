@@ -1,4 +1,4 @@
-package com.example.backendtourservice.repository;
+package com.example.backendtourservice.repository.weatherair;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

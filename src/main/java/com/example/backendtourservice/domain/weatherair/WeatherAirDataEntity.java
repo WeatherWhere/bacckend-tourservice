@@ -20,7 +20,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class WeatherAirDataEntity extends BaseEntity {
-    // 중기 예보 식별자
+
     @EmbeddedId
     private WeatherAirDataCompositeKey id;
 

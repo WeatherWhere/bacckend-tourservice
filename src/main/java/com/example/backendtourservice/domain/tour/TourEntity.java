@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 import lombok.*;
 
 @Entity
-@Table(name = "tour_spot2", schema = "tour")
+@Table(name = "tour_spot", schema = "tour")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,11 +16,13 @@ import lombok.*;
 public class TourEntity {
     @Id
     @Column(name = "tour_id")
-    private long contentid;
+    private long contentId;
     @Column (name = "content_type_id")
-    private long contenttypeid;
+    private long contentTypeId;
     @Column(name = "region_code")
-    private int areacode;
+    private int areaCode;
+    @Column(name = "sigungu_code")
+    private int sigunguCode;
     @Column(name = "location_x")
     private double mapx;
     @Column(name = "location_y")
@@ -28,7 +30,9 @@ public class TourEntity {
     @Column(name = "title")
     private String title;
     @Column(name = "first_image")
-    private String firstimage;
+    private String firstImage;
+    @Column(name = "addr")
+    private String addr;
     @Column(name = "tel")
     private String tel;
     @Column(name = "zip_code")

@@ -10,13 +10,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class TourDTO {
-    private long contentid;
-    private long contenttypeid;
-    private int areacode;
+    private long contentId;
+    private long contentTypeId;
+    private int areaCode;
+    private int sigunguCode;
     private double mapx;
     private double mapy;
     private String title;
-    private String firstimage;
+    private String firstImage;
     private String tel;
     private String zipcode;
+    private String addr;
 }

@@ -97,7 +97,7 @@ public class CalculateRankDataServiceImpl implements CalculateRankDataService{
     }
 
     // 정규화한 데이터에 가중치 곱하기
-    private double calculateRankValue(RankDataDTO dataDTO, MinMaxDataDTO minMaxDataDTO) {
+    private Double calculateRankValue(RankDataDTO dataDTO, MinMaxDataDTO minMaxDataDTO) {
         // 가중치 임의로 줌
         double rPmW =  0.35;
         double rAmW = 0.1;

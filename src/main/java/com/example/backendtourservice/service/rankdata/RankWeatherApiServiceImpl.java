@@ -14,9 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.backendtourservice.domain.rankdata.RankEntity;
 import com.example.backendtourservice.dto.ResultDTO;
+import com.example.backendtourservice.dto.rankdata.RankDTO;
 import com.example.backendtourservice.dto.rankdata.RankWeatherCompositeKeyDTO;
 import com.example.backendtourservice.dto.rankdata.RankWeatherDTO;
+import com.example.backendtourservice.repository.rankdata.RankRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -25,6 +28,9 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RequiredArgsConstructor
 public class RankWeatherApiServiceImpl implements RankWeatherApiService {
+
+    private final CalculateTCIService calculateTCIService;
+    private final RankRepository rankRepository;
 
     // 해당 지역, 예보 날짜 Air api 대기 주간예보 url
     private URI makeWeatherUrl() throws URISyntaxException {
@@ -47,9 +53,6 @@ public class RankWeatherApiServiceImpl implements RankWeatherApiService {
             JSONObject data = (JSONObject)dat.get(i);
             String level1 = (String)data.get("level1");
             String level2 = (String)data.get("level2");
-            log.info("level1 : {}", level1);
-            log.info("level2 : {}", level2);
-
             LocalDate baseDate = LocalDate.parse((String)data.get("fcstDate"));
             Double sumPcp = (Double)data.get("sumPcp");
             Double avgSky = (Double)data.get("avgSky");
@@ -94,6 +97,16 @@ public class RankWeatherApiServiceImpl implements RankWeatherApiService {
         return list;
     }
 
+    // db 저장
+    private RankWeatherCompositeKeyDTO saveDb(RankDTO dto) {
+        RankEntity entity = dtoToEntity(dto);
+        rankRepository.save(entity);
+        return RankWeatherCompositeKeyDTO.builder()
+            .weatherY(dto.getWeatherY())
+            .weatherX(dto.getWeatherX())
+            .baseDate(dto.getBaseDate())
+            .build();
+    }
 
     // 날씨 rankWeatherData를 api를 호출하여 받아와서 RankData DB 업데이트
     @Override
@@ -102,7 +115,13 @@ public class RankWeatherApiServiceImpl implements RankWeatherApiService {
         try {
             // 날씨 rankWeatherData 가져오기
             List<RankWeatherDTO> rankWeatherDTOList = getRankWeatherData();
-
+            int len = rankWeatherDTOList.size();
+            for (int i = 0; i < len; i++) {
+                log.info("rankWeatherDTO : {}", rankWeatherDTOList.get(i));
+                RankDTO rankDataDTO = calculateTCIService.makeRankData(rankWeatherDTOList.get(i));
+                log.info("rankDataDTO : {}", rankDataDTO);
+                list.add(saveDb(rankDataDTO));
+            }
             log.info("list : {}", rankWeatherDTOList);
         } catch (ParseException e) {
             // json 데이터 파싱할 때 error

@@ -14,13 +14,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @RestController
-@RequestMapping("/rank")
+@RequestMapping("/tour")
 @RequiredArgsConstructor
 @Log4j2
 public class RankWeatherDataController {
     private final RankWeatherApiService rankWeatherApiService;
 
-    @GetMapping("/update")
+    @GetMapping("/rank/update")
     public ResultDTO<List<RankWeatherCompositeKeyDTO>> updateRankData () {
         ResultDTO<List<RankWeatherCompositeKeyDTO>> result = rankWeatherApiService.updateRankData();
         return result;

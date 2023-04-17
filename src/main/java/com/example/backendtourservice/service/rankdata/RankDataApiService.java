@@ -8,7 +8,7 @@ import com.example.backendtourservice.dto.ResultDTO;
 import com.example.backendtourservice.dto.rankdata.RankDTO;
 import com.example.backendtourservice.dto.rankdata.RankWeatherCompositeKeyDTO;
 
-public interface RankWeatherApiService {
+public interface RankDataApiService {
     ResultDTO<List<RankWeatherCompositeKeyDTO>> updateRankData();
 
     default RankEntity dtoToEntity(RankDTO dto) {
@@ -31,6 +31,7 @@ public interface RankWeatherApiService {
             .HDGrade(dto.getHDGrade())
             .WGrade(dto.getWGrade())
             .TCIGrade(dto.getTCIGrade())
+            .pm10Grade(dto.getPm10Grade())
             .build();
     }
 }

@@ -1,5 +1,7 @@
 package com.example.backendtourservice.domain.rankdata;
 
+import com.example.backendtourservice.domain.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -18,7 +20,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class RankEntity {
+public class RankEntity extends BaseEntity {
     @EmbeddedId
     private RankWeatherCompositeKey id;
 
@@ -63,4 +65,8 @@ public class RankEntity {
     // 관광기후지수 등급
     @Column(name = "tci_grade")
     private String TCIGrade;
+
+    // 미세먼지(pm10) 1시간 등급
+    @Column(name = "pm10_grade")
+    private String pm10Grade;
 }

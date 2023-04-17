@@ -50,4 +50,7 @@ public class RankDTO {
 
     // 관광기후지수 등급
     private String TCIGrade;
+
+    // 미세먼지(pm10) 1시간 등급
+    private String pm10Grade;
 }

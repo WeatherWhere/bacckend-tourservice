@@ -3,6 +3,7 @@ package com.example.backendtourservice.service.rankdata;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.example.backendtourservice.domain.rankdata.RankEntity;
 import com.example.backendtourservice.dto.ResultDTO;
+import com.example.backendtourservice.dto.rankdata.RankAirDTO;
 import com.example.backendtourservice.dto.rankdata.RankDTO;
 import com.example.backendtourservice.dto.rankdata.RankWeatherCompositeKeyDTO;
 import com.example.backendtourservice.dto.rankdata.RankWeatherDTO;
@@ -27,17 +29,31 @@ import lombok.extern.log4j.Log4j2;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class RankWeatherApiServiceImpl implements RankWeatherApiService {
+public class RankDataApiServiceImpl implements RankDataApiService {
 
     private final CalculateTCIService calculateTCIService;
     private final RankRepository rankRepository;
 
-    // 해당 지역, 예보 날짜 Air api 대기 주간예보 url
+    // 해당 지역, 예보 날짜 api 대기 주간예보 url
     private URI makeWeatherUrl() throws URISyntaxException {
         // weather db에 BaseDate 형식:"20231011"이므로 LocalDate -> String으로 바꿔주는 과정 필요
         String baseUrl = "http://k8s-weatherw-weatherw-96e049a27a-1334965090.ap-northeast-2.elb.amazonaws.com/weather/tour/data";
         log.info("baseUrl : {}", baseUrl);
         return new URI(baseUrl);
+    }
+
+    // 해당 위경도 대기 실시간 데이터 호출 api url
+    private URI makeAirUrl(Double locationX, Double locationY) throws URISyntaxException {
+        // weather db에 BaseDate 형식:"20231011"이므로 LocalDate -> String으로 바꿔주는 과정 필요
+        String baseUrl = "http://k8s-weatherw-weatherw-96e049a27a-1334965090.ap-northeast-2.elb.amazonaws.com/air/tour/data?";
+        // 경도
+        String x = "x=" + locationX;
+        // 위도
+        String y = "&y=" + locationY;
+
+        String resultUrl = baseUrl + x + y;
+        log.info("대기 호출 url : {}", resultUrl);
+        return new URI(resultUrl);
     }
 
     // json 데이터를 RankWeatherDto로 파싱
@@ -89,6 +105,28 @@ public class RankWeatherApiServiceImpl implements RankWeatherApiService {
         return  list;
     }
 
+    // json 데이터를 RankAirDto로 파싱
+    private RankAirDTO jsonAirParsing(String result) throws ParseException {
+        List<RankWeatherDTO> list = new ArrayList<>();
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObject = (JSONObject)jsonParser.parse(result);
+        JSONArray dat = (JSONArray)jsonObject.get("data");
+
+        JSONObject data = (JSONObject)dat.get(0);
+        String stationName = (String)data.get("stationName");
+        String pm10Grade = (String)data.get("pm10Grade");
+        LocalDateTime dataTime = LocalDateTime.parse((String)data.get("dataTime"));
+
+        RankAirDTO dto = RankAirDTO.builder()
+            .stationName(stationName)
+            .dataTime(dataTime)
+            .pm10Grade(pm10Grade)
+            .build();
+
+        log.info("RankAirData : {}", dto);
+        return dto;
+    }
+
     // 날씨 rank Data api 호출하여 데이터 받아오기
     private List<RankWeatherDTO> getRankWeatherData() throws ParseException, URISyntaxException {
         RestTemplate restTemplate= new RestTemplate();
@@ -99,6 +137,20 @@ public class RankWeatherApiServiceImpl implements RankWeatherApiService {
         List<RankWeatherDTO> list = jsonWeatherParsing(result);
         log.info("날씨 중기예보 호출 데이터:{}", list);
         return list;
+    }
+
+    private RankDTO getAirData(RankDTO dto) throws ParseException, URISyntaxException {
+        RestTemplate restTemplate = new RestTemplate();
+        // RestTemplate으로 대기 실시간 data 받아오기
+        String result = restTemplate.getForObject(makeAirUrl(dto.getLocationX(), dto.getLocationY()), String.class);
+        log.info("api 호출 데이터 : {}", result);
+
+        // Json 파싱
+        RankAirDTO rankAirDTO = jsonAirParsing(result);
+
+        dto.setPm10Grade(rankAirDTO.getPm10Grade());
+        log.info("대기 업데이트한 데이터 : {}", dto);
+        return dto;
     }
 
     // db 저장
@@ -124,7 +176,12 @@ public class RankWeatherApiServiceImpl implements RankWeatherApiService {
             for (int i = 0; i < len; i++) {
                 log.info("rankWeatherDTO : {}", rankWeatherDTOList.get(i));
                 RankDTO rankDataDTO = calculateTCIService.makeRankData(rankWeatherDTOList.get(i));
+
+                // 대기 데이터 추가
+                rankDataDTO = getAirData(rankDataDTO);
+
                 log.info("rankDataDTO : {}", rankDataDTO);
+
                 list.add(saveDb(rankDataDTO));
             }
             log.info("list : {}", rankWeatherDTOList);

@@ -22,6 +22,8 @@ public interface RankWeatherApiService {
             .id(id)
             .level1(dto.getLevel1())
             .level2(dto.getLevel2())
+            .locationX(dto.getLocationX())
+            .locationY(dto.getLocationY())
             .SIGrade(dto.getSIGrade())
             .TCI(dto.getTCI())
             .HNGrade(dto.getHNGrade())

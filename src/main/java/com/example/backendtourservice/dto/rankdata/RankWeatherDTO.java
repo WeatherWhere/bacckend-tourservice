@@ -21,6 +21,12 @@ public class RankWeatherDTO {
     //격자 y
     private Integer weatherY;
 
+    // 경도
+    private Double locationX;
+
+    // 위도
+    private Double locationY;
+
     //예보날짜
     private LocalDate baseDate;
 

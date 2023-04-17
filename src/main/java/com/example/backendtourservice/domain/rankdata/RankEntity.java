@@ -22,6 +22,14 @@ public class RankEntity {
     @EmbeddedId
     private RankWeatherCompositeKey id;
 
+    // 경도
+    @Column(name = "location_x")
+    private Double locationX;
+
+    // 위도
+    @Column(name = "location_y")
+    private Double locationY;
+
     @Column(name = "level1")
     private String level1;
 

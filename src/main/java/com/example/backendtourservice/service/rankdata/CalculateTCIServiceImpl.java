@@ -206,6 +206,8 @@ public class CalculateTCIServiceImpl implements CalculateTCIService {
             .level2(rankWeatherDTO.getLevel2())
             .weatherX(rankWeatherDTO.getWeatherX())
             .weatherY(rankWeatherDTO.getWeatherY())
+            .locationX(rankWeatherDTO.getLocationX())
+            .locationY(rankWeatherDTO.getLocationY())
             .baseDate(rankWeatherDTO.getBaseDate())
             .HNGrade(HNGrade)
             .HDGrade(HDGrade)

@@ -35,7 +35,7 @@ public class RankWeatherApiServiceImpl implements RankWeatherApiService {
     // 해당 지역, 예보 날짜 Air api 대기 주간예보 url
     private URI makeWeatherUrl() throws URISyntaxException {
         // weather db에 BaseDate 형식:"20231011"이므로 LocalDate -> String으로 바꿔주는 과정 필요
-        String baseUrl = "http://localhost:8080/weather/tour/data";
+        String baseUrl = "http://k8s-weatherw-weatherw-96e049a27a-1334965090.ap-northeast-2.elb.amazonaws.com/weather/tour/data";
         log.info("baseUrl : {}", baseUrl);
         return new URI(baseUrl);
     }
@@ -63,12 +63,16 @@ public class RankWeatherApiServiceImpl implements RankWeatherApiService {
             Double maxTmp = (Double)data.get("maxTmp");
             Integer weatherX = ((Long)((Long)data.get("weatherX"))).intValue();
             Integer weatherY = ((Long)((Long)data.get("weatherY"))).intValue();
-
+            Double locationX = (Double)data.get("locationX");
+            log.info("locationX : {}", locationX);
+            Double locationY = (Double)data.get("locationY");
             RankWeatherDTO dto = RankWeatherDTO.builder()
                 .level1(level1)
                 .level2(level2)
                 .weatherX(weatherX)
                 .weatherY(weatherY)
+                .locationX(locationX)
+                .locationY(locationY)
                 .baseDate(baseDate)
                 .sumPcp(sumPcp)
                 .avgSky(avgSky)
@@ -100,6 +104,7 @@ public class RankWeatherApiServiceImpl implements RankWeatherApiService {
     // db 저장
     private RankWeatherCompositeKeyDTO saveDb(RankDTO dto) {
         RankEntity entity = dtoToEntity(dto);
+        log.info("entity: {}", entity);
         rankRepository.save(entity);
         return RankWeatherCompositeKeyDTO.builder()
             .weatherY(dto.getWeatherY())

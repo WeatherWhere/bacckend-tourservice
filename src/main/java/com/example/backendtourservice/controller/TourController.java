@@ -18,23 +18,23 @@ import java.util.List;
 public class TourController {
     private final TourService tourService;
 
-    @GetMapping("/api")
+    @GetMapping("/save")
     public Object saveTourData() throws ParseException, org.json.simple.parser.ParseException {
         return tourService.saveTourData();
     }
 
-    @GetMapping("/api2")
+    @GetMapping("/data")
     public ResponseEntity<List<TourDTO>> getTourDBData(@RequestParam Integer areaCode, @RequestParam Integer sigunguCode, @RequestParam Long contentTypeId) {
         List<TourDTO> tourList = (List<TourDTO>) tourService.getTourDBData(areaCode, sigunguCode, contentTypeId);
         return ResponseEntity.ok(tourList);
     }
 
-    @GetMapping("/api3")
+    @GetMapping("/detail")
     public Object getDetailInfo(@RequestParam Long contentId, @RequestParam Long contentTypeId) throws ParseException, org.json.simple.parser.ParseException {
         return tourService.getDetailInfo(contentId, contentTypeId);
     }
 
-    @GetMapping("/api4")
+    @GetMapping("/common")
     public Object getCommonInfo(@RequestParam Long contentId, @RequestParam Long contentTypeId) throws ParseException, org.json.simple.parser.ParseException {
         return tourService.getCommonInfo(contentId, contentTypeId);
     }

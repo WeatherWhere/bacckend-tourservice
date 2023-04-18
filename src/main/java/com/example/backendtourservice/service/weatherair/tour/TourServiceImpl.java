@@ -75,7 +75,6 @@ public class TourServiceImpl implements TourService {
     private JSONArray jsonParser(String jsonString) throws ParseException {
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(jsonString);
-
         JSONObject response = (JSONObject) jsonObject.get("response");
         JSONObject body = (JSONObject) response.get("body");
         JSONObject items = (JSONObject) body.get("items");
@@ -115,7 +114,7 @@ public class TourServiceImpl implements TourService {
                     .useTime((String) item.get("usetime"))
                     .build();
         } else if (contentTypeId == 14) { //문화시설
-             dto = CultureDTO.builder()
+            dto = CultureDTO.builder()
                     .chkBabyCarriageCulture((String) item.get("chkbabycarriageculture"))
                     .chkCreditCardCulture((String) item.get("chkcreditcardculture"))
                     .chkPetCulture((String) item.get("chkpetculture"))

@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Entity
@@ -22,7 +21,15 @@ import lombok.ToString;
 @ToString
 public class RankEntity extends BaseEntity {
     @EmbeddedId
-    private RankWeatherCompositeKey id;
+    private RankCompositeKey id;
+
+    //격자 x
+    @Column(name = "weather_x")
+    private Integer weatherX;
+
+    //격자 y
+    @Column(name = "weather_y")
+    private Integer weatherY;
 
     // 경도
     @Column(name = "location_x")
@@ -32,11 +39,6 @@ public class RankEntity extends BaseEntity {
     @Column(name = "location_y")
     private Double locationY;
 
-    @Column(name = "level1")
-    private String level1;
-
-    @Column(name = "level2")
-    private String level2;
 
     // 한낮 열쾌적지수 등급
     @Column(name = "hn_grade")

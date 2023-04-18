@@ -17,14 +17,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Embeddable
-public class RankWeatherCompositeKey implements Serializable {
-    //격자 x
-    @Column(name = "weather_x")
-    private Integer weatherX;
+public class RankCompositeKey implements Serializable {
+    @Column(name = "level1")
+    private String level1;
 
-    //격자 y
-    @Column(name = "weather_y")
-    private Integer weatherY;
+    @Column(name = "level2")
+    private String level2;
 
     //예보날짜
     @Column(name = "base_date")

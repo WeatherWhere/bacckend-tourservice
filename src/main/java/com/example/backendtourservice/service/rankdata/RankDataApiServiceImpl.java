@@ -19,7 +19,7 @@ import com.example.backendtourservice.domain.rankdata.RankEntity;
 import com.example.backendtourservice.dto.ResultDTO;
 import com.example.backendtourservice.dto.rankdata.RankAirDTO;
 import com.example.backendtourservice.dto.rankdata.RankDTO;
-import com.example.backendtourservice.dto.rankdata.RankWeatherCompositeKeyDTO;
+import com.example.backendtourservice.dto.rankdata.RankCompositeKeyDTO;
 import com.example.backendtourservice.dto.rankdata.RankWeatherDTO;
 import com.example.backendtourservice.repository.rankdata.RankRepository;
 
@@ -37,7 +37,8 @@ public class RankDataApiServiceImpl implements RankDataApiService {
     // 해당 지역, 예보 날짜 api 대기 주간예보 url
     private URI makeWeatherUrl() throws URISyntaxException {
         // weather db에 BaseDate 형식:"20231011"이므로 LocalDate -> String으로 바꿔주는 과정 필요
-        String baseUrl = "http://k8s-weatherw-weatherw-96e049a27a-1334965090.ap-northeast-2.elb.amazonaws.com/weather/tour/data";
+        // String baseUrl = "http://k8s-weatherw-weatherw-96e049a27a-1334965090.ap-northeast-2.elb.amazonaws.com/weather/tour/data";
+        String baseUrl = "http://localhost:8080/weather/tour/data";
         log.info("baseUrl : {}", baseUrl);
         return new URI(baseUrl);
     }
@@ -45,7 +46,8 @@ public class RankDataApiServiceImpl implements RankDataApiService {
     // 해당 위경도 대기 실시간 데이터 호출 api url
     private URI makeAirUrl(Double locationX, Double locationY) throws URISyntaxException {
         // weather db에 BaseDate 형식:"20231011"이므로 LocalDate -> String으로 바꿔주는 과정 필요
-        String baseUrl = "http://k8s-weatherw-weatherw-96e049a27a-1334965090.ap-northeast-2.elb.amazonaws.com/air/tour/data?";
+        //String baseUrl = "http://k8s-weatherw-weatherw-96e049a27a-1334965090.ap-northeast-2.elb.amazonaws.com/air/tour/data?";
+        String baseUrl = "http://localhost:8090/air/tour/data?";
         // 경도
         String x = "x=" + locationX;
         // 위도
@@ -154,21 +156,21 @@ public class RankDataApiServiceImpl implements RankDataApiService {
     }
 
     // db 저장
-    private RankWeatherCompositeKeyDTO saveDb(RankDTO dto) {
+    private RankCompositeKeyDTO saveDb(RankDTO dto) {
         RankEntity entity = dtoToEntity(dto);
         log.info("entity: {}", entity);
         rankRepository.save(entity);
-        return RankWeatherCompositeKeyDTO.builder()
-            .weatherY(dto.getWeatherY())
-            .weatherX(dto.getWeatherX())
+        return RankCompositeKeyDTO.builder()
+            .level1(dto.getLevel1())
+            .level2(dto.getLevel2())
             .baseDate(dto.getBaseDate())
             .build();
     }
 
     // 날씨 rankWeatherData를 api를 호출하여 받아와서 RankData DB 업데이트
     @Override
-    public ResultDTO<List<RankWeatherCompositeKeyDTO>> updateRankData() {
-        List<RankWeatherCompositeKeyDTO> list = new ArrayList<>();
+    public ResultDTO<List<RankCompositeKeyDTO>> updateRankData() {
+        List<RankCompositeKeyDTO> list = new ArrayList<>();
         try {
             // 날씨 rankWeatherData 가져오기
             List<RankWeatherDTO> rankWeatherDTOList = getRankWeatherData();

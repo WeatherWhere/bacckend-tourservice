@@ -42,7 +42,7 @@ public class WeatherAirDataController {
     public String getTest() {
 
         // weatherservice Pod에 요청을 보내고 응답을 반환
-        String weatherserivceUrl = "https://api.weatherwhere.link/weather/forecast/short/main/now?locationX=37.541578&locationY=127.0487023";
+        String weatherserivceUrl = "https://weatherservice:8080/weather/forecast/short/main/now?locationX=37.541578&locationY=127.0487023";
         RestTemplate restTemplate = new RestTemplate();
         String response = restTemplate.getForObject(weatherserivceUrl, String.class);
 

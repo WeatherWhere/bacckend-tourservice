@@ -1,6 +1,9 @@
 package com.example.backendtourservice.controller;
 
+import com.example.backendtourservice.domain.tour.TourEntity;
+import com.example.backendtourservice.dto.ResultDTO;
 import com.example.backendtourservice.dto.tour.TourDTO;
+import com.example.backendtourservice.service.weatherair.tour.SearchService;
 import com.example.backendtourservice.service.weatherair.tour.TourService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,25 +20,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TourController {
     private final TourService tourService;
+    private final SearchService searchService;
 
-    @GetMapping("/api")
+    @GetMapping("/save")
     public Object saveTourData() throws ParseException, org.json.simple.parser.ParseException {
         return tourService.saveTourData();
     }
 
-    @GetMapping("/api2")
+    @GetMapping("/dbdata")
     public ResponseEntity<List<TourDTO>> getTourDBData(@RequestParam Integer areaCode, @RequestParam Integer sigunguCode, @RequestParam Long contentTypeId) {
         List<TourDTO> tourList = (List<TourDTO>) tourService.getTourDBData(areaCode, sigunguCode, contentTypeId);
         return ResponseEntity.ok(tourList);
     }
 
-    @GetMapping("/api3")
+    @GetMapping("/detail")
     public Object getDetailInfo(@RequestParam Long contentId, @RequestParam Long contentTypeId) throws ParseException, org.json.simple.parser.ParseException {
         return tourService.getDetailInfo(contentId, contentTypeId);
     }
 
-    @GetMapping("/api4")
+    @GetMapping("/common")
     public Object getCommonInfo(@RequestParam Long contentId, @RequestParam Long contentTypeId) throws ParseException, org.json.simple.parser.ParseException {
         return tourService.getCommonInfo(contentId, contentTypeId);
+    }
+
+    @GetMapping("/search")
+    public ResultDTO<List<TourEntity>> getSearchData(@RequestParam Double x, @RequestParam Double y) {
+        return searchService.getSearchData(x, y);
     }
 }

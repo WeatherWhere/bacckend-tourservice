@@ -16,6 +16,7 @@ import com.example.backendtourservice.service.weatherair.CalculateRankDataServic
 import com.example.backendtourservice.service.weatherair.WeatherAirDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/tour")
@@ -35,5 +36,19 @@ public class WeatherAirDataController {
     public ResultDTO<List<WeatherAirCompositeKeyDTO>> updateRankValue(@RequestParam LocalDate baseDate) {
         ResultDTO<List<WeatherAirCompositeKeyDTO>> result = calculateRankDataService.updateRankValue(baseDate);
         return result;
+    }
+
+    @GetMapping("/test")
+    public String getTest() {
+
+        // weatherservice Pod에 요청을 보내고 응답을 반환
+        String weatherserivceUrl = "https://api.weatherwhere.link/weather/forecast/short/main/now?locationX=37.541578&locationY=127.0487023";
+        RestTemplate restTemplate = new RestTemplate();
+        String response = restTemplate.getForObject(weatherserivceUrl, String.class);
+
+        // 받은 응답을 출력
+        System.out.println("Response from weathervice: " + response);
+
+        return "Response from weatherservice: " + response;
     }
 }

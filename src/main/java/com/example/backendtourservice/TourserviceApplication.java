@@ -6,9 +6,12 @@ import java.util.Map;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 // JPA의 변화를 감시하는 어노테이션
@@ -27,5 +30,14 @@ public class TourserviceApplication {
 		}
 		SpringApplication.run(TourserviceApplication.class, args);
 	}
+		@Bean
+	    public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+		    @Override
+		    public void addCorsMappings(CorsRegistry registry) {
+			registry.addMapping("/**").allowedOrigins("http://localhost:3000","https://dpezzthgwnnvc.cloudfront.net");
+		    }
+		};
+	    }
 
 }

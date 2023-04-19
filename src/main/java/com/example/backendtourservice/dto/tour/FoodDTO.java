@@ -14,7 +14,7 @@ public class FoodDTO {
     private String discountInfoFoof;
     private String firstMenu;
     private String infoCenterFood;
-    private int kidsFacility;
+    private String kidsFacility;
     private String openTimeFood;
     private String packing;
     private String parkingFood;
@@ -23,5 +23,5 @@ public class FoodDTO {
     private String seat;
     private String smoking;
     private String treatMenu;
-    private int lcnsno;
+    private long lcnsno;
 }

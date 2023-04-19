@@ -14,8 +14,6 @@ public class LodgingDTO {
     private String checkoutTime;
     private String chkCooking;
     private String foodPlace;
-    private int goodStay;
-    private int hanok;
     private String infoCenterLodging;
     private String parkingLodging;
     private String pickUp;
@@ -23,17 +21,17 @@ public class LodgingDTO {
     private String reservationUrl;
     private String roomType;
     private String subFacility;
-    private int barbecue;
-    private int beauty;
-    private int beverage;
-    private int bicycle;
-    private int campfire;
-    private int fitness;
-    private int karaoke;
-    private int publicBath;
-    private int publicPc;
-    private int sauna;
-    private int seminar;
-    private int sports;
+    private String barbecue;
+    private String beauty;
+    private String beverage;
+    private String bicycle;
+    private String campfire;
+    private String fitness;
+    private String karaoke;
+    private String publicBath;
+    private String publicPc;
+    private String sauna;
+    private String seminar;
+    private String sports;
     private String refundRegulation;
 }

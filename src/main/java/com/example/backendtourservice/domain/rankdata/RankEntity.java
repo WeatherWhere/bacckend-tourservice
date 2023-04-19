@@ -71,4 +71,16 @@ public class RankEntity extends BaseEntity {
     // 미세먼지(pm10) 1시간 등급
     @Column(name = "pm10_grade")
     private String pm10Grade;
+
+    // 미세먼지 농도
+    @Column(name = "pm10_value")
+    private Integer pm10Value;
+
+    // 초미세먼지 농도
+    @Column(name = "pm25_value")
+    private Integer pm25Value;
+
+    // 초미세먼지 1시간 등급
+    @Column(name = "pm25_grade")
+    private String pm25Grade;
 }

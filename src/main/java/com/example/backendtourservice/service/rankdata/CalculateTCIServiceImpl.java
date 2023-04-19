@@ -17,8 +17,7 @@ public class CalculateTCIServiceImpl implements CalculateTCIService {
     private Double calculateHI(Double T, Double RH) {
         // 섭씨 온도 -> 화씨 온도
         T = T * 1.8 + 32;
-        log.info("화씨 온도 : {}", T);
-        log.info("상대 습도 : {}", RH);
+
         Double HI = 0.0;
         if (T <= 80) {
             HI = 0.5 * (T + 61 + ((T - 68) * 1.2) + (RH * 0.094));

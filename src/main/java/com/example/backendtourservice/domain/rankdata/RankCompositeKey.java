@@ -3,6 +3,7 @@ package com.example.backendtourservice.domain.rankdata;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class RankCompositeKey implements Serializable {
     @Column(name = "level1")
     private String level1;
 
+    @Nullable
     @Column(name = "level2")
     private String level2;
 

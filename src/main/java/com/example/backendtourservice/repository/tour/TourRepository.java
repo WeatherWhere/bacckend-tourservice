@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface TourRepository extends JpaRepository<TourEntity, Long> {
     List<TourEntity> findByAreaCodeAndSigunguCodeAndContentTypeId(Integer areaCode, Integer sigunguCode, Long contentTypeId);
+    List<TourEntity> findBySigunguCodeAndAreaCode(Integer sigunguCode, Integer areaCode);
 }

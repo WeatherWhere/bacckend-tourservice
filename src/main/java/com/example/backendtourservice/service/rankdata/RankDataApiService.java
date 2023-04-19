@@ -32,6 +32,9 @@ public interface RankDataApiService {
             .WGrade(dto.getWGrade())
             .TCIGrade(dto.getTCIGrade())
             .pm10Grade(dto.getPm10Grade())
+            .pm10Value(dto.getPm10Value())
+            .pm25Value(dto.getPm25Value())
+            .pm25Grade(dto.getPm25Grade())
             .build();
     }
 }

@@ -11,21 +11,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class RankDTO {
-    private String level1;
-    private String level2;
+public class RecommendRankDTO {
 
-    //격자 x
-    private Integer weatherX;
+    // 지역
+    private String region;
 
-    //격자 y
-    private Integer weatherY;
+    // 시군구
+    private String sigungu;
 
     // 경도
-    private Double locationX;
+    private Double longitude;
 
     // 위도
-    private Double locationY;
+    private Double latitude;
 
     //예보날짜
     private LocalDate baseDate;

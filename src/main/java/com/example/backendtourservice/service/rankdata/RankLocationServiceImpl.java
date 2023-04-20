@@ -41,7 +41,8 @@ public class RankLocationServiceImpl implements RankLocationService {
 
         Integer sigunguCode = codes.get(0)[0];
         Integer regionCode = codes.get(0)[1];
-        List<TourEntity> spots = tourRepository.findBySigunguCodeAndAreaCode(sigunguCode, regionCode);
+        Long contentTypeId = 12L;
+        List<TourEntity> spots = tourRepository.findByAreaCodeAndSigunguCodeAndContentTypeId(regionCode, sigunguCode, contentTypeId);
         List<RecommendTourDTO> tourDTOS = new ArrayList<>();
         int len = spots.size();
         for (int i = 0; i < len; i++) {
@@ -51,9 +52,13 @@ public class RankLocationServiceImpl implements RankLocationService {
                 .addr(tourEntity.getAddr())
                 .contentId(tourEntity.getContentId())
                 .firstImage(tourEntity.getFirstImage())
+                .contentTypeId(tourEntity.getContentTypeId())
+                .tel(tourEntity.getTel())
+                .zipcode(tourEntity.getZipcode())
                 .latitude(tourEntity.getMapy())
                 .longitude(tourEntity.getMapx())
                 .build();
+
             tourDTOS.add(recommendTourDTO);
         }
 
@@ -87,7 +92,7 @@ public class RankLocationServiceImpl implements RankLocationService {
         LocalDate searchDate = LocalDate.now();
 
         // 10개 시군구 추천
-        Pageable pageable = PageRequest.of(0, 5);
+        Pageable pageable = PageRequest.of(0, 6);
         List<RankEntity> locations = rankRepository.findByIdBaseDateAndIdLevel2IsNotNullOrderByTCIDesc(searchDate, pageable);
         List<RecommendDTO> result = new ArrayList<>();
         int len = locations.size();
@@ -103,6 +108,6 @@ public class RankLocationServiceImpl implements RankLocationService {
             result.add(recommendDTO);
         }
 
-        return ResultDTO.of(HttpStatus.OK.value(), "10개의 시군구 지역을 추천하는데 성공하였습니다.", result);
+        return ResultDTO.of(HttpStatus.OK.value(), "5개의 시군구 지역을 추천하는데 성공하였습니다.", result);
     }
 }

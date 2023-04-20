@@ -14,6 +14,7 @@ import com.example.backendtourservice.service.rankdata.RankLocationService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/tour")
@@ -33,6 +34,20 @@ public class RankWeatherDataController {
     public ResultDTO<List<RecommendDTO>> recommendLocation() {
         ResultDTO<List<RecommendDTO>> resultDTO = rankLocationService.getRecommendLocation();
         return resultDTO;
+    }
+
+    @GetMapping("/test")
+    public String getTest() {
+
+        // weatherservice Pod에 요청을 보내고 응답을 반환
+        String weatherserivceUrl = "https://weatherservice:8080/weather/forecast/short/main/now?locationX=37.541578&locationY=127.0487023";
+        RestTemplate restTemplate = new RestTemplate();
+        String response = restTemplate.getForObject(weatherserivceUrl, String.class);
+
+        // 받은 응답을 출력
+        System.out.println("Response from weathervice: " + response);
+
+        return "Response from weatherservice: " + response;
     }
 
 }

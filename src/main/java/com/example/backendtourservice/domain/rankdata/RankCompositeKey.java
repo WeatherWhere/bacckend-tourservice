@@ -1,8 +1,9 @@
-package com.example.backendtourservice.domain.weatherair;
+package com.example.backendtourservice.domain.rankdata;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -17,13 +18,15 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Embeddable
-public class WeatherAirDataCompositeKey implements Serializable {
-    // 예보 구역 코드
-    @Column(name = "region_code")
-    private String regionCode;
-    // 예보 날짜
+public class RankCompositeKey implements Serializable {
+    @Column(name = "level1")
+    private String level1;
+
+    @Nullable
+    @Column(name = "level2")
+    private String level2;
+
+    //예보날짜
     @Column(name = "base_date")
-    private LocalDate baseTime;
-
-
+    private LocalDate baseDate;
 }

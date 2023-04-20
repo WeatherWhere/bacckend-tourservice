@@ -38,6 +38,7 @@ public class WeatherAirDataController {
         return result;
     }
 
+    //test
     @GetMapping("/test")
     public String getTest() {
 

@@ -38,7 +38,8 @@ public class RankDataApiServiceImpl implements RankDataApiService {
     // 해당 지역, 예보 날짜 api 대기 주간예보 url
     private URI makeWeatherUrl() throws URISyntaxException {
         // weather db에 BaseDate 형식:"20231011"이므로 LocalDate -> String으로 바꿔주는 과정 필요
-        String baseUrl = "http://k8s-weatherw-weatherw-96e049a27a-1334965090.ap-northeast-2.elb.amazonaws.com/weather/tour/data";
+        String baseUrl = "https://api.weatherwhere.link/weather/tour/data";
+        // String baseUrl = "http://k8s-weatherw-weatherw-96e049a27a-1334965090.ap-northeast-2.elb.amazonaws.com/weather/tour/data";
         // String baseUrl = "http://localhost:8080/weather/tour/data";
         log.info("날씨 호출 URL : {}", baseUrl);
         return new URI(baseUrl);
@@ -47,7 +48,8 @@ public class RankDataApiServiceImpl implements RankDataApiService {
     // 해당 위경도 대기 실시간 데이터 호출 api url
     private URI makeAirUrl(Double locationX, Double locationY) throws URISyntaxException {
         // weather db에 BaseDate 형식:"20231011"이므로 LocalDate -> String으로 바꿔주는 과정 필요
-        String baseUrl = "http://k8s-weatherw-weatherw-96e049a27a-1334965090.ap-northeast-2.elb.amazonaws.com/air/tour/data?";
+        String baseUrl = "https://api.weatherwhere.link/air/realtime/tour/data?";
+        // String baseUrl = "http://k8s-weatherw-weatherw-96e049a27a-1334965090.ap-northeast-2.elb.amazonaws.com/air/tour/data?";
         // String baseUrl = "http://localhost:8090/air/realtime/tour/data?";
         // 경도
         String x = "x=" + locationX;
@@ -82,7 +84,7 @@ public class RankDataApiServiceImpl implements RankDataApiService {
             Double maxTmp = (Double)data.get("maxTmp");
             Integer weatherX = ((Long)((Long)data.get("weatherX"))).intValue();
             Integer weatherY = ((Long)((Long)data.get("weatherY"))).intValue();
-            Double locationX = (Double)data.get("locationX");log.info("locationX : {}", locationX);
+            Double locationX = (Double)data.get("locationX");
             Double locationY = (Double)data.get("locationY");
 
             RankWeatherDTO dto = RankWeatherDTO.builder()
@@ -109,30 +111,42 @@ public class RankDataApiServiceImpl implements RankDataApiService {
     }
 
     // json 데이터를 RankAirDto로 파싱
-    private RankAirDTO jsonAirParsing(String result) throws ParseException, NullPointerException {
-        List<RankWeatherDTO> list = new ArrayList<>();
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObject = (JSONObject)jsonParser.parse(result);
-        JSONObject data = (JSONObject)jsonObject.get("data");
+    private RankAirDTO jsonAirParsing(String result) {
+        try {
+            List<RankWeatherDTO> list = new ArrayList<>();
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject)jsonParser.parse(result);
+            JSONObject data = (JSONObject)jsonObject.get("data");
 
-        String stationName = (String)data.get("stationName");
-        String pm10Grade = (String)data.get("pm10Grade");
-        String pm25Grade = (String)data.get("pm25Grade");
-        Integer pm10Value = ((Long)data.get("pm10Value")).intValue();
-        Integer pm25Value = ((Long)data.get("pm25Value")).intValue();
-        LocalDateTime dataTime = LocalDateTime.parse((String)data.get("dataTime"));
+            String stationName = (String)data.get("stationName");
+            String pm10Grade = (String)data.get("pm10Grade");
+            String pm25Grade = (String)data.get("pm25Grade");
+            Integer pm10Value = ((Long)data.get("pm10Value")).intValue();
+            Integer pm25Value = ((Long)data.get("pm25Value")).intValue();
+            LocalDateTime dataTime = LocalDateTime.parse((String)data.get("dataTime"));
 
-        RankAirDTO dto = RankAirDTO.builder()
-            .stationName(stationName)
-            .dataTime(dataTime)
-            .pm10Grade(pm10Grade)
-            .pm10Value(pm10Value)
-            .pm25Value(pm25Value)
-            .pm25Grade(pm25Grade)
-            .build();
+            RankAirDTO dto = RankAirDTO.builder()
+                .stationName(stationName)
+                .dataTime(dataTime)
+                .pm10Grade(pm10Grade)
+                .pm10Value(pm10Value)
+                .pm25Value(pm25Value)
+                .pm25Grade(pm25Grade)
+                .build();
 
-        log.info("RankAirData : {}", dto);
-        return dto;
+            log.info("RankAirData : {}", dto);
+            return dto;
+        } catch (ParseException e) {
+            e.getStackTrace();
+            log.warn("jsonAirParsing- ParseException 발생");
+        } catch (NullPointerException e) {
+            e.getStackTrace();
+            log.warn("jsonAirParsing- NullPointerException 발생");
+        } catch (Exception e) {
+            e.getStackTrace();
+            log.warn("jsonAirParsing- 예기치 못한 에러 발생");
+        }
+        return new RankAirDTO();
     }
 
     // 날씨 rank Data api 호출하여 데이터 받아오기
@@ -143,24 +157,33 @@ public class RankDataApiServiceImpl implements RankDataApiService {
         log.info("api 호출 데이터 : {}", result);
         // Json 파싱해서 data 저장
         List<RankWeatherDTO> list = jsonWeatherParsing(result);
-        log.info("날씨 중기예보 호출 데이터:{}", list);
+        log.info("날씨 단기예보 호출 데이터:{}", list);
         return list;
     }
 
-    private RankDTO getAirData(RankDTO dto) throws ParseException, URISyntaxException, HttpClientErrorException {
-        RestTemplate restTemplate = new RestTemplate();
-        // RestTemplate으로 대기 실시간 data 받아오기
-        String result = restTemplate.getForObject(makeAirUrl(dto.getLocationX(), dto.getLocationY()), String.class);
-        log.info("api 호출 데이터 : {}", result);
+    private RankDTO getAirData(RankDTO dto) {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            // RestTemplate으로 대기 실시간 data 받아오기
+            String result = restTemplate.getForObject(makeAirUrl(dto.getLocationX(), dto.getLocationY()), String.class);
+            log.info("api 호출 데이터 : {}", result);
 
-        // Json 파싱
-        RankAirDTO rankAirDTO = jsonAirParsing(result);
+            // Json 파싱
+            RankAirDTO rankAirDTO = jsonAirParsing(result);
 
-        dto.setPm10Grade(rankAirDTO.getPm10Grade());
-        dto.setPm10Value(rankAirDTO.getPm10Value());
-        dto.setPm25Grade(rankAirDTO.getPm25Grade());
-        dto.setPm25Value(rankAirDTO.getPm25Value());
-        log.info("대기 업데이트한 데이터 : {}", dto);
+            dto.setPm10Grade(rankAirDTO.getPm10Grade());
+            dto.setPm10Value(rankAirDTO.getPm10Value());
+            dto.setPm25Grade(rankAirDTO.getPm25Grade());
+            dto.setPm25Value(rankAirDTO.getPm25Value());
+
+            log.info("대기 업데이트한 데이터 : {}", dto);
+        } catch (URISyntaxException e) {
+            e.getStackTrace();
+            log.warn("getAirData()- URISyntaxException 발생");
+        } catch (HttpClientErrorException e) {
+            e.getStackTrace();
+            log.warn("getAirData()- HttpClientErrorException 발생");
+        }
         return dto;
     }
 
@@ -200,9 +223,6 @@ public class RankDataApiServiceImpl implements RankDataApiService {
             // json 데이터 파싱할 때 error
             e.printStackTrace();
             log.error("ParseException이 발생");
-        } catch (HttpClientErrorException e) {
-            e.printStackTrace();
-            log.warn("대기 api 호출하는데 실패하였습니다.");
         } catch (NullPointerException e) {
             e.printStackTrace();
             log.warn("대기 DB 해당 데이터가 null 값입니다.");

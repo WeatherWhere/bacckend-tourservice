@@ -13,6 +13,9 @@ public class RecommendTourDTO {
     // 관광지 Id
     private long contentId;
 
+    // 관광지 타입 Id
+    private long contentTypeId;
+
     // 경도
     private Double longitude;
 
@@ -25,5 +28,12 @@ public class RecommendTourDTO {
     // 관광지 이미지
     private String firstImage;
 
+    // 관광지 주소
     private String addr;
+
+    // 관광지 전화번호
+    private String tel;
+
+
+    private String zipcode;
 }

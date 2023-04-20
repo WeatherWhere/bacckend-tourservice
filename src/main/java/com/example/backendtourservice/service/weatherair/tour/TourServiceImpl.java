@@ -105,77 +105,100 @@ public class TourServiceImpl implements TourService {
         Object dto = null;
         if (contentTypeId == 12) { //관광지
             dto = TouristSpotDTO.builder()
-                    .chkBabyCarriage((String) item.get("chkbabycarriage"))
-                    .chkCreditCard((String) item.get("chkcreditcard"))
-                    .chkPet((String) item.get("chkpet"))
-                    .expGuide((String) item.get("expguide"))
-                    .infoCenter((String) item.get("infocenter"))
-                    .parking((String) item.get("parking"))
-                    .restDate((String) item.get("restdate"))
-                    .useTime((String) item.get("usetime"))
+                    .chkBabyCarriage(parseEmptyString(item.get("chkbabycarriage")))
+                    .chkCreditCard(parseEmptyString(item.get("chkcreditcard")))
+                    .chkPet(parseEmptyString(item.get("chkpet")))
+                    .expGuide(parseEmptyString(item.get("expguide")))
+                    .infoCenter(parseEmptyString(item.get("infocenter")))
+                    .parking(parseEmptyString(item.get("parking")))
+                    .restDate(parseEmptyString(item.get("restdate")))
+                    .useTime(parseEmptyString(item.get("usetime")))
                     .build();
         } else if (contentTypeId == 14) { //문화시설
              dto = CultureDTO.builder()
-                    .chkBabyCarriageCulture((String) item.get("chkbabycarriageculture"))
-                    .chkCreditCardCulture((String) item.get("chkcreditcardculture"))
-                    .chkPetCulture((String) item.get("chkpetculture"))
-                    .discountInfo((String) item.get("discountinfo"))
-                    .infoCenterCulture((String) item.get("infocenterculture"))
-                    .parkingCulture((String) item.get("parkingcluture"))
-                    .parkingFee((String) item.get("parkingfee"))
-                    .restDateCulture((String) item.get("restdateculture"))
-                    .useFee((String) item.get("usefee"))
-                    .useTimeCulture((String) item.get("usetimeculture"))
+                    .chkBabyCarriageCulture(parseEmptyString(item.get("chkbabycarriageculture")))
+                    .chkCreditCardCulture(parseEmptyString(item.get("chkcreditcardculture")))
+                    .chkPetCulture(parseEmptyString(item.get("chkpetculture")))
+                    .discountInfo(parseEmptyString(item.get("discountinfo")))
+                    .infoCenterCulture(parseEmptyString(item.get("infocenterculture")))
+                    .parkingCulture(parseEmptyString(item.get("parkingcluture")))
+                    .parkingFee(parseEmptyString(item.get("parkingfee")))
+                    .restDateCulture(parseEmptyString(item.get("restdateculture")))
+                    .useFee(parseEmptyString(item.get("usefee")))
+                    .useTimeCulture(parseEmptyString(item.get("usetimeculture")))
                     .build();
         } else if (contentTypeId == 32) { //숙박
             dto = LodgingDTO.builder()
-                    .checkinTime((String) item.get("checkintime"))
-                    .checkoutTime((String) item.get("checkouttime"))
-                    .chkCooking((String) item.get("chkcooking"))
-                    .foodPlace((String) item.get("foodplace"))
-                    .goodStay((Integer) item.get("goodstay"))
-                    .hanok((Integer) item.get("hanok"))
-                    .infoCenterLodging((String) item.get("infocenterlodging"))
-                    .parkingLodging((String) item.get("parkinglodging"))
-                    .pickUp((String) item.get("pickup"))
-                    .reservationLodging((String) item.get("reservationlodging"))
-                    .reservationUrl((String) item.get("reservationurl"))
-                    .roomType((String) item.get("roomtype"))
-                    .subFacility((String) item.get("subfacility"))
-                    .barbecue((Integer) item.get("barbecue"))
-                    .beauty((Integer) item.get("beauty"))
-                    .beverage((Integer) item.get("beverage"))
-                    .bicycle((Integer) item.get("bicycle"))
-                    .campfire((Integer) item.get("campfire"))
-                    .fitness((Integer) item.get("fitness"))
-                    .karaoke((Integer) item.get("karaoke"))
-                    .publicBath((Integer) item.get("publicbath"))
-                    .publicPc((Integer) item.get("publicpc"))
-                    .sauna((Integer) item.get("sauna"))
-                    .seminar((Integer) item.get("seminar"))
-                    .sports((Integer) item.get("sports"))
-                    .refundRegulation((String) item.get("refundregulation"))
+                    .checkinTime(parseEmptyString(item.get("checkintime")))
+                    .checkoutTime(parseEmptyString(item.get("checkouttime")))
+                    .chkCooking(parseEmptyString(item.get("chkcooking")))
+                    .foodPlace(parseEmptyString(item.get("foodplace")))
+                    .infoCenterLodging(parseEmptyString(item.get("infocenterlodging")))
+                    .parkingLodging(parseEmptyString(item.get("parkinglodging")))
+                    .pickUp(parseEmptyString(item.get("pickup")))
+                    .reservationLodging(parseEmptyString(item.get("reservationlodging")))
+                    .reservationUrl(parseEmptyString(item.get("reservationurl")))
+                    .roomType(parseEmptyString(item.get("roomtype")))
+                    .subFacility(parseEmptyString(item.get("subfacility")))
+                    .barbecue(parseInt(item.get("barbecue")))
+                    .beauty(parseInt(item.get("beauty")))
+                    .beverage(parseInt(item.get("beverage")))
+                    .bicycle(parseInt(item.get("bicycle")))
+                    .campfire(parseInt(item.get("campfire")))
+                    .fitness(parseInt(item.get("fitness")))
+                    .karaoke(parseInt(item.get("karaoke")))
+                    .publicBath(parseInt(item.get("publicbath")))
+                    .publicPc(parseInt(item.get("publicpc")))
+                    .sauna(parseInt(item.get("sauna")))
+                    .seminar(parseInt(item.get("seminar")))
+                    .sports(parseInt(item.get("sports")))
+                    .refundRegulation(parseEmptyString(item.get("refundregulation")))
                     .build();
         } else if (contentTypeId == 39) { //음식
             dto = FoodDTO.builder()
-                    .chkCreditCardFood((String) item.get("chkcreditcardfood"))
-                    .discountInfoFoof((String) item.get("discountinfofood"))
-                    .firstMenu((String) item.get("firstmenu"))
-                    .infoCenterFood((String) item.get("infocenterfood"))
-                    .kidsFacility((Integer) item.get("kidsfacility"))
-                    .openTimeFood((String) item.get("opentimefood"))
-                    .packing((String) item.get("packing"))
-                    .parkingFood((String) item.get("parkingfood"))
-                    .reservationFood((String) item.get("reservationfood"))
-                    .restDateFood((String) item.get("restdatefood"))
-                    .seat((String) item.get("seat"))
-                    .smoking((String) item.get("smoking"))
-                    .treatMenu((String) item.get("treatmenu"))
-                    .lcnsno((Integer) item.get("lcnsno"))
+                    .chkCreditCardFood(parseEmptyString(item.get("chkcreditcardfood")))
+                    .discountInfoFoof(parseEmptyString(item.get("discountinfofood")))
+                    .firstMenu(parseEmptyString(item.get("firstmenu")))
+                    .infoCenterFood(parseEmptyString(item.get("infocenterfood")))
+                    .kidsFacility(parseInt(item.get("kidsfacility")))
+                    .openTimeFood(parseEmptyString(item.get("opentimefood")))
+                    .packing(parseEmptyString(item.get("packing")))
+                    .parkingFood(parseEmptyString(item.get("parkingfood")))
+                    .reservationFood(parseEmptyString(item.get("reservationfood")))
+                    .restDateFood(parseEmptyString(item.get("restdatefood")))
+                    .seat(parseEmptyString(item.get("seat")))
+                    .smoking(parseEmptyString(item.get("smoking")))
+                    .treatMenu(parseEmptyString(item.get("treatmenu")))
+                    .lcnsno(Long.parseLong((String) item.get("lcnsno")))
                     .build();
         }
         return dto;
     }
+
+    private String parseEmptyString(Object value) {
+        if (value instanceof String) {
+            String strValue = (String) value;
+            if (strValue.isEmpty()) {
+            return "정보가 없습니다.";
+            } else {
+                return (String) value;
+            }
+        }
+        return (String) value;
+    }
+
+    private String parseInt(Object value) {
+        if (value instanceof String) {
+            String strValue = (String) value;
+            if (strValue == "1") {
+                return "있음";
+            } else {
+                return "없음";
+            }
+        }
+        return (String) value;
+    }
+
     //공통정보
     @Override
     public CommonDTO getCommonInfo(Long contentId, Long contentTypeId) throws ParseException {

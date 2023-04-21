@@ -37,10 +37,11 @@ public class RankLocationServiceImpl implements RankLocationService {
         log.info("region : {}", region);
         log.info("sigungu: {}", sigungu);
         List<Integer[]> codes = regionCodeRepository.findBySigunguAndRegionCode(sigungu, region);
-        List<RegionCodeEntity> list = regionCodeRepository.findAll();
 
         Integer sigunguCode = codes.get(0)[0];
         Integer regionCode = codes.get(0)[1];
+
+        // 관광지만 조회
         Long contentTypeId = 12L;
         List<TourEntity> spots = tourRepository.findByAreaCodeAndSigunguCodeAndContentTypeId(regionCode, sigunguCode, contentTypeId);
         List<RecommendTourDTO> tourDTOS = new ArrayList<>();
@@ -92,13 +93,12 @@ public class RankLocationServiceImpl implements RankLocationService {
         LocalDate searchDate = LocalDate.now();
 
         // 10개 시군구 추천
-        Pageable pageable = PageRequest.of(0, 6);
-        List<RankEntity> locations = rankRepository.findByIdBaseDateAndIdLevel2IsNotNullOrderByTCIDesc(searchDate, pageable);
+        Pageable pageable = PageRequest.of(0, 5);
+        List<RankEntity> locations = rankRepository.findByIdBaseDateOrderByTCIDesc(searchDate, pageable);
         List<RecommendDTO> result = new ArrayList<>();
         int len = locations.size();
         for (int i = 0; i < len; i++) {
             RankEntity rankEntity = locations.get(i);
-            if (rankEntity.getId().getLevel2().length() == 0) continue;
             List<RecommendTourDTO> tours = findTouristSpots(rankEntity.getId().getLevel1(), rankEntity.getId().getLevel2());
             RecommendRankDTO rankDTO = makeRecommendRankDTO(rankEntity);
             RecommendDTO recommendDTO = RecommendDTO.builder()

@@ -11,7 +11,4 @@ import com.example.backendtourservice.domain.tour.RegionCodeEntity;
 public interface RegionCodeRepository extends JpaRepository<RegionCodeEntity, Long> {
     @Query("SELECT r.sigunguCode, r.regionCode FROM RegionCodeEntity r WHERE r.sigungu = :sigunguValue AND r.region = :regionValue")
     List<Integer[]> findBySigunguAndRegionCode(@Param("sigunguValue") String sigunguValue, @Param("regionValue") String regionValue);
-
-    List<RegionCodeEntity> findAll();
-
 }

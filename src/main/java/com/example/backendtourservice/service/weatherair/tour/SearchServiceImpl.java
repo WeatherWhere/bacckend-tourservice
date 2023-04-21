@@ -15,8 +15,8 @@ public class SearchServiceImpl implements SearchService {
     private final TourRepository tourRepository;
 
     @Override
-    public ResultDTO<List<TourEntity>> getSearchData(double x, double y) {
-        return ResultDTO.of(HttpStatus.OK.value(), "반경 20KM 내의 관광지 검색결과", tourRepository.findBySql(x, y));
+    public ResultDTO<List<TourEntity>> getSearchData(int contentTypeId, double x, double y) {
+        return ResultDTO.of(HttpStatus.OK.value(), "반경 10KM 내의 관광지 검색결과", tourRepository.findBySql(contentTypeId, x, y));
     }
 }
 

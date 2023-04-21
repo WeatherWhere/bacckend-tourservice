@@ -44,7 +44,7 @@ public class TourController {
     }
 
     @GetMapping("/search")
-    public ResultDTO<List<TourEntity>> getSearchData(@RequestParam Double x, @RequestParam Double y) {
-        return searchService.getSearchData(x, y);
+    public ResultDTO<List<TourEntity>> getSearchData(@RequestParam Integer contentTypeId, @RequestParam Double x, @RequestParam Double y) {
+        return searchService.getSearchData(contentTypeId, x, y);
     }
 }

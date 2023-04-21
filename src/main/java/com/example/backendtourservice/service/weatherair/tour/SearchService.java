@@ -6,5 +6,5 @@ import com.example.backendtourservice.dto.ResultDTO;
 import java.util.List;
 
 public interface SearchService {
-    ResultDTO<List<TourEntity>> getSearchData(double x, double y);
+    ResultDTO<List<TourEntity>> getSearchData(int contentTypeId, double x, double y);
 }

@@ -72,8 +72,6 @@ public class RankLocationServiceImpl implements RankLocationService {
             .pm10Grade(rankEntity.getPm10Grade())
             .HNGrade(rankEntity.getHNGrade())
             .pm25Grade(rankEntity.getPm25Grade())
-            .pm25Value(rankEntity.getPm10Value())
-            .pm10Value(rankEntity.getPm10Value())
             .RGrade(rankEntity.getRGrade())
             .TCI(rankEntity.getTCI())
             .SIGrade(rankEntity.getSIGrade())
@@ -95,6 +93,7 @@ public class RankLocationServiceImpl implements RankLocationService {
         // 10개 시군구 추천
         Pageable pageable = PageRequest.of(0, 5);
         List<RankEntity> locations = rankRepository.findByIdBaseDateOrderByTCIDesc(searchDate, pageable);
+        log.info("추천 지역 : {}", locations);
         List<RecommendDTO> result = new ArrayList<>();
         int len = locations.size();
         for (int i = 0; i < len; i++) {

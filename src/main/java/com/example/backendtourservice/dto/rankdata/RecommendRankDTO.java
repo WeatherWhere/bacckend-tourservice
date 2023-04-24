@@ -52,11 +52,6 @@ public class RecommendRankDTO {
     // 미세먼지(pm10) 1시간 등급
     private String pm10Grade;
 
-    // 미세먼지 농도
-    private Integer pm10Value;
-
-    // 초미세먼지 농도
-    private Integer pm25Value;
 
     // 초미세먼지 1시간 등급
     private String pm25Grade;

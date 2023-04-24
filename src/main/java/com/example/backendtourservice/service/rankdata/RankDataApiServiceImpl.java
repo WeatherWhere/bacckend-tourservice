@@ -61,6 +61,30 @@ public class RankDataApiServiceImpl implements RankDataApiService {
         return new URI(resultUrl);
     }
 
+    // 미세먼지 등급 조회
+    private String getPm10Grade(Integer pm10Value) {
+        String grade = "";
+
+        if (pm10Value >= 0 && pm10Value < 31) grade = "좋음";
+        else if (pm10Value >= 31 && pm10Value < 81) grade = "보통";
+        else if (pm10Value >= 81 && pm10Value < 151) grade = "나쁨";
+        else if (pm10Value >= 151) grade = "매우나쁨";
+
+        return grade;
+    }
+
+    // 초미세먼지 등급 조회
+    private String getPm25Grade(Integer pm25Value) {
+        String grade = "";
+
+        if (pm25Value >= 0 && pm25Value < 16) grade = "좋음";
+        else if (pm25Value >= 16 && pm25Value < 36) grade = "보통";
+        else if (pm25Value >= 36 && pm25Value < 76) grade = "나쁨";
+        else if (pm25Value >= 76) grade = "매우나쁨";
+
+        return grade;
+    }
+
     // json 데이터를 RankWeatherDto로 파싱
     private List<RankWeatherDTO> jsonWeatherParsing(String result) throws ParseException {
         List<RankWeatherDTO> list = new ArrayList<>();
@@ -128,10 +152,10 @@ public class RankDataApiServiceImpl implements RankDataApiService {
             RankAirDTO dto = RankAirDTO.builder()
                 .stationName(stationName)
                 .dataTime(dataTime)
-                .pm10Grade(pm10Grade)
+                .pm10Grade(getPm10Grade(pm10Value))
                 .pm10Value(pm10Value)
                 .pm25Value(pm25Value)
-                .pm25Grade(pm25Grade)
+                .pm25Grade(getPm25Grade(pm25Value))
                 .build();
 
             log.info("RankAirData : {}", dto);

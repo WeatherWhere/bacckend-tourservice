@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
+/**
+ * 반환할 Http Status 코드와 메시지를 커스터마이징하기 위한 ENUM
+ */
 public enum ErrorCode {
     /*
      * 400 BAD_REQUEST: 잘못된 요청

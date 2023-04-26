@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+/**
+ * 추천한 지역의 관광 지수와 대기 지수를 포함하는 DTO
+ */
 public class RecommendRankDTO {
 
     // 지역

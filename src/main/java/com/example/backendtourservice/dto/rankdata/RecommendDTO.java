@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+/**
+ * 지역을 추천시 반환할 DTO
+ */
 public class RecommendDTO {
    RecommendRankDTO rankValue;
    List<RecommendTourDTO> spots;

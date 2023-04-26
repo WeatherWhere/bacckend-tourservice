@@ -30,7 +30,7 @@ public interface TourService {
      * @param contentTypeId 콘텐츠타입 아이디
      * @return tourList(관광 데이터 List<TourEntity>) 리턴
      */
-    Object getTourDBData(Integer areaCode, Integer sigunguCode, Long contentTypeId);
+    Object getTourDBData(Integer areaCode, Integer sigunguCode, Integer contentTypeId);
 
     /**
      * makeUrl2 메서드로 만들어진 url를 통해서 소개정보 Open API를 호출하고 jsonParser 메서드를 통해서 파싱,
@@ -41,7 +41,7 @@ public interface TourService {
      * @return dto(콘텐츠타입에 따른 콘텐츠 아이디에 해당하는 관광지의 소개정보)
      * @throws org.json.simple.parser.ParseException
      */
-    Object getDetailInfo(Long contentId, Long contentTypeId) throws org.json.simple.parser.ParseException;
+    Object getDetailInfo(Long contentId, Integer contentTypeId) throws org.json.simple.parser.ParseException;
 
     /**
      * makeUrl3 메서드로 만들어진 url를 통해서 공통정보 Open API를 호출하고 jsonParser 메서드를 통해서 파싱,
@@ -52,7 +52,7 @@ public interface TourService {
      * @return dto(콘텐츠 아이디와 콘텐츠타입 아이디에 따른 관광지의 공통정보 CommonDTO) 리턴
      * @throws org.json.simple.parser.ParseException
      */
-    Object getCommonInfo(Long contentId, Long contentTypeId) throws org.json.simple.parser.ParseException;
+    Object getCommonInfo(Long contentId, Integer contentTypeId) throws org.json.simple.parser.ParseException;
 
 
     //Dto -> Entity 메서드

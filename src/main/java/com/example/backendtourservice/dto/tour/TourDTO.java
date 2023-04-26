@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
  */
 public class TourDTO {
     private long contentId;
-    private long contentTypeId;
+    private int contentTypeId;
     private int areaCode;
     private int sigunguCode;
     private double mapx;

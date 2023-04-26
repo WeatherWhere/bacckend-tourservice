@@ -48,7 +48,7 @@ public class TourServiceImpl implements TourService {
      * @param contenttypeid 콘텐츠타입 아이디
      * @return url2(소개정보 Open API URL)
      */
-    private String makeUrl2(long contentid, long contenttypeid) {
+    private String makeUrl2(long contentid, int contenttypeid) {
         String BASE_URL = "http://apis.data.go.kr/B551011/KorService/detailIntro";
         String serviceKey = "?ServiceKey="+System.getProperty("TOUR_SERVICE_KEY");
         String numOfRows = "&numOfRows=10";
@@ -70,7 +70,7 @@ public class TourServiceImpl implements TourService {
      * @param contenttypeid 콘텐츠타입 아이디
      * @return url3(공통정보 Open API URL)
      */
-    private String makeUrl3(long contentid, long contenttypeid) {
+    private String makeUrl3(long contentid, int contenttypeid) {
         String BASE_URL = "http://apis.data.go.kr/B551011/KorService/detailCommon";
         String serviceKey = "?ServiceKey="+System.getProperty("TOUR_SERVICE_KEY");
         String numOfRows = "&numOfRows=10";
@@ -131,7 +131,7 @@ public class TourServiceImpl implements TourService {
      * @throws ParseException
      */
     @Override
-    public Object getDetailInfo(Long contentId, Long contentTypeId) throws ParseException {
+    public Object getDetailInfo(Long contentId, Integer contentTypeId) throws ParseException {
         RestTemplate  restTemplate = new RestTemplate();
         String apiUrl = makeUrl2(contentId, contentTypeId);
         String jsonString = restTemplate.getForObject(apiUrl, String.class);
@@ -259,7 +259,7 @@ public class TourServiceImpl implements TourService {
      * @throws ParseException
      */
     @Override
-    public CommonDTO getCommonInfo(Long contentId, Long contentTypeId) throws ParseException {
+    public CommonDTO getCommonInfo(Long contentId, Integer contentTypeId) throws ParseException {
         RestTemplate restTemplate = new RestTemplate();
         String apiUrl = makeUrl3(contentId, contentTypeId);
         String jsonString = restTemplate.getForObject(apiUrl, String.class);
@@ -288,7 +288,7 @@ public class TourServiceImpl implements TourService {
                 JSONObject item = (JSONObject) obj;
                 TourDTO dto = TourDTO.builder()
                         .contentId(Long.parseLong(item.get("contentid").toString()))
-                        .contentTypeId(Long.parseLong(item.get("contenttypeid").toString()))
+                        .contentTypeId(Integer.parseInt(item.get("contenttypeid").toString()))
                         .areaCode(Integer.parseInt(item.get("areacode").toString()))
                         .sigunguCode(Integer.parseInt(item.get("sigungucode").toString()))
                         .mapx(Double.parseDouble(item.get("mapx").toString()))
@@ -309,7 +309,7 @@ public class TourServiceImpl implements TourService {
                 JSONObject item = (JSONObject) obj;
                 TourDTO dto = TourDTO.builder()
                         .contentId(item.get("contentid") != null && !item.get("contentid").toString().isEmpty() ? Long.parseLong(item.get("contentid").toString()) : 0L)
-                        .contentTypeId(item.get("contentTypeid") != null && !item.get("contentTypeid").toString().isEmpty() ? Long.parseLong(item.get("contentTypeid").toString()) : 0L)
+                        .contentTypeId(item.get("contentTypeid") != null && !item.get("contentTypeid").toString().isEmpty() ? Integer.parseInt(item.get("contentTypeid").toString()) : 0)
                         .areaCode(item.get("areacode") != null && !item.get("areacode").toString().isEmpty() ? Integer.parseInt(item.get("areacode").toString()) : 0)
                         .sigunguCode(item.get("sigungucode") != null && !item.get("sigungucode").toString().isEmpty() ? Integer.parseInt(item.get("sigungucode").toString()) : 0)
                         .mapx(item.get("mapx") != null && !item.get("mapx").toString().isEmpty() ? Double.parseDouble(item.get("mapx").toString()) : 0.0)
@@ -337,7 +337,7 @@ public class TourServiceImpl implements TourService {
      * @return tourList(관광 데이터 List<TourEntity>) 리턴
      */
     @Override
-    public List<TourEntity> getTourDBData(Integer areaCode, Integer sigunguCode, Long contentTypeId) {
+    public List<TourEntity> getTourDBData(Integer areaCode, Integer sigunguCode, Integer contentTypeId) {
         List<TourEntity> tourList = tourRepository.findByAreaCodeAndSigunguCodeAndContentTypeId(areaCode, sigunguCode, contentTypeId);
         if (tourList.isEmpty()) {
             throw new NoSuchElementException();

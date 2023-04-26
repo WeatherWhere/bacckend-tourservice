@@ -48,7 +48,7 @@ public class RankLocationServiceImpl implements RankLocationService {
         Integer regionCode = codes.get(0)[1];
 
         // 관광지만 조회
-        Long contentTypeId = 12L;
+        Integer contentTypeId = 12;
         List<TourEntity> spots = tourRepository.findByAreaCodeAndSigunguCodeAndContentTypeId(regionCode, sigunguCode, contentTypeId);
         List<RecommendTourDTO> tourDTOS = new ArrayList<>();
         int len = spots.size();

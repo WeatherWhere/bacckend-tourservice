@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+/**
+ * 추천한 지역에 해당하는 관광지 DTO
+ */
 public class RecommendTourDTO {
     // 관광지 Id
     private long contentId;

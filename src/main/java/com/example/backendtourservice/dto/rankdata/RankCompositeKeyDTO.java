@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+/**
+ * RankEntitiy의 복합키 DTO
+ */
 public class RankCompositeKeyDTO {
     private String level1;
     private String level2;

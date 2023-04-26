@@ -32,7 +32,13 @@ public class RankLocationServiceImpl implements RankLocationService {
     private final RegionCodeRepository regionCodeRepository;
     private final TourRepository tourRepository;
 
-    // 시군구에 해당하는 관광지 찾기
+    /**
+     * 지역 명 region과 시군구 명 sigungu에 해당하는 관광지 리스트를 DB에서 조회하여 List<RecommendTourDTO> 리턴합니다.
+     *
+     * @param region 지역 명
+     * @param sigungu 시군구 명
+     * @return 해당 지역과 시군구에 해당하는 관광지 리스트를 DB에서 조회하여 List<RecommendTourDTO> 리턴
+     */
     private List<RecommendTourDTO> findTouristSpots(String region, String sigungu) {
         log.info("region : {}", region);
         log.info("sigungu: {}", sigungu);
@@ -66,6 +72,13 @@ public class RankLocationServiceImpl implements RankLocationService {
         return tourDTOS;
     }
 
+
+    /**
+     * RankEntity를 RecommendRankDTO로 변환하여 RecommendRankDTO 리턴합니다.
+     *
+     * @param rankEntity 관광 순위 데이터 Entity(날씨 + 대기)
+     * @return  RankEntity -> RecommendRankDTO로 변환하여 RecommendRankDTO 리턴
+     */
     private RecommendRankDTO makeRecommendRankDTO(RankEntity rankEntity) {
         return RecommendRankDTO.builder()
             .HDGrade(rankEntity.getHDGrade())
@@ -85,12 +98,16 @@ public class RankLocationServiceImpl implements RankLocationService {
             .build();
     }
 
-    // 시군구 지역 추천 조회
+    /**
+     * 5개의 RankEntity DB에서 날씨 관광 지수와 대기 값을 바탕으로 5개의 관광 지역을 조회하여 ResultDTO<List<RecommendDTO>>를 리턴합니다.
+     *
+     * @return DB에서 관광지수와 대기로 조회한 5개의 추천 지역을 ResultDTO<List<RecommendDTO>> 리턴
+     */
     @Override
     public ResultDTO<List<RecommendDTO>> getRecommendLocation() {
         LocalDate searchDate = LocalDate.now();
 
-        // 10개 시군구 추천
+        // 5개 시군구 추천
         Pageable pageable = PageRequest.of(0, 5);
         List<RankEntity> locations = rankRepository.findByIdBaseDateOrderByTCIDesc(searchDate, pageable);
         log.info("추천 지역 : {}", locations);

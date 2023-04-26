@@ -35,22 +35,34 @@ public class RankDataApiServiceImpl implements RankDataApiService {
     private final CalculateTCIService calculateTCIService;
     private final RankRepository rankRepository;
 
-    // 해당 지역, 예보 날짜 api 대기 주간예보 url
+
+    /**
+     * 전국 시군구 지역의 오늘의 대기 단기 예보 호출 api url을 리턴합니다.
+     *
+     * @return 대기 단기 예보 호출 url을 리턴, 그렇지 않다면 throw 예외
+     * @throws URISyntaxException
+     */
     private URI makeWeatherUrl() throws URISyntaxException {
         // weather db에 BaseDate 형식:"20231011"이므로 LocalDate -> String으로 바꿔주는 과정 필요
         String baseUrl = "https://api.weatherwhere.link/weather/tour/data";
-        // String baseUrl = "http://k8s-weatherw-weatherw-96e049a27a-1334965090.ap-northeast-2.elb.amazonaws.com/weather/tour/data";
-        // String baseUrl = "http://localhost:8080/weather/tour/data";
+
         log.info("날씨 호출 URL : {}", baseUrl);
         return new URI(baseUrl);
     }
 
+
+    /**
+     * 위경도를 가지고 대기 실시간 데이터 호출 api url을 리턴합니다.
+     * @param locationX 경도
+     * @param locationY 위도
+     * @return 대기 실시간 데이터 호출 api url을 리턴, 그렇지 않다면 throw 예외
+     * @throws URISyntaxException
+     */
     // 해당 위경도 대기 실시간 데이터 호출 api url
     private URI makeAirUrl(Double locationX, Double locationY) throws URISyntaxException {
         // weather db에 BaseDate 형식:"20231011"이므로 LocalDate -> String으로 바꿔주는 과정 필요
         String baseUrl = "https://api.weatherwhere.link/air/realtime/tour/data?";
-        // String baseUrl = "http://k8s-weatherw-weatherw-96e049a27a-1334965090.ap-northeast-2.elb.amazonaws.com/air/tour/data?";
-        // String baseUrl = "http://localhost:8090/air/realtime/tour/data?";
+
         // 경도
         String x = "x=" + locationX;
         // 위도
@@ -61,7 +73,13 @@ public class RankDataApiServiceImpl implements RankDataApiService {
         return new URI(resultUrl);
     }
 
-    // 미세먼지 등급 조회
+
+    /**
+     * 미세먼지 농도로 등급 조회하여 리턴합니다.
+     *
+     * @param pm10Value 미세먼지 농도
+     * @return 미세먼지 농도로 조회한 등급을 리턴
+     */
     private String getPm10Grade(Integer pm10Value) {
         String grade = "";
 
@@ -73,7 +91,13 @@ public class RankDataApiServiceImpl implements RankDataApiService {
         return grade;
     }
 
-    // 초미세먼지 등급 조회
+
+    /**
+     * 초미세먼지 농도로 등급 조회하여 리턴합니다.
+     *
+     * @param pm25Value 초미세먼지 농도
+     * @return 초미세먼지 농도로 조회한 등급을 리턴
+     */
     private String getPm25Grade(Integer pm25Value) {
         String grade = "";
 
@@ -85,7 +109,14 @@ public class RankDataApiServiceImpl implements RankDataApiService {
         return grade;
     }
 
-    // json 데이터를 RankWeatherDto로 파싱
+
+    /**
+     * 날씨 단기예보 api를 호출해서 얻은 json을 파싱해서 날씨 Rank 데이터로 가공하여 List<RankWeatherDTO>로 리턴합니다.
+     *
+     * @param result 날씨 단기예보 api를 호출해서 얻은 json
+     * @return json을 파싱해서 날씨 Rank 데이터로 가공하여 List<RankWeatherDTO>로 리턴, 그렇지 않으면 throw 예외
+     * @throws ParseException
+     */
     private List<RankWeatherDTO> jsonWeatherParsing(String result) throws ParseException {
         List<RankWeatherDTO> list = new ArrayList<>();
         JSONParser jsonParser = new JSONParser();
@@ -134,6 +165,14 @@ public class RankDataApiServiceImpl implements RankDataApiService {
         return  list;
     }
 
+
+    /**
+     * 대기 실시간 예보 api를 호출해서 얻은 json을 파싱해서 대기 Rank 데이터로 가공하여 RankAirDTO로 리턴합니다.
+     *
+     * @param result 대기 실시간 예보 api를 호출해서 얻은 json
+     * @return json을 파싱해서 대기 Rank 데이터로 가공하여 RankAirDTO로 리턴, 그렇지 않으면 throw 예외
+     * @throws ParseException
+     */
     // json 데이터를 RankAirDto로 파싱
     private RankAirDTO jsonAirParsing(String result) {
         try {
@@ -173,7 +212,14 @@ public class RankDataApiServiceImpl implements RankDataApiService {
         return new RankAirDTO();
     }
 
-    // 날씨 rank Data api 호출하여 데이터 받아오기
+
+    /**
+     * 날씨 api를 호출하여 받은 json 값을 가공하여 날씨 RankData를 리턴합니다.
+     *
+     * @return 날씨 api를 호출하여 받은 데이터를 가공하여 날씨 RankData를 리턴, 그렇지 않으면 throw 예외
+     * @throws ParseException
+     * @throws URISyntaxException
+     */
     private List<RankWeatherDTO> getRankWeatherData() throws ParseException, URISyntaxException {
         RestTemplate restTemplate= new RestTemplate();
         // RestTemplate으로 날씨 중기예보 data 받아오기
@@ -185,6 +231,11 @@ public class RankDataApiServiceImpl implements RankDataApiService {
         return list;
     }
 
+    /**
+     * 대기 api를 호출하여 받은 json 값을 가공하여 대기 RankData를 가진 RankDTO를 리턴합니다.
+     * @param dto 날씨 Rank 데이터를 포함하고 있는 RankDTO
+     * @return 날씨와 대기 RankData를 포함한 RankDTO를 리턴
+     */
     private RankDTO getAirData(RankDTO dto) {
         try {
             RestTemplate restTemplate = new RestTemplate();
@@ -211,7 +262,13 @@ public class RankDataApiServiceImpl implements RankDataApiService {
         return dto;
     }
 
-    // db 저장
+
+    /**
+     * RankDTO를 DB에 업데이트 한 Entity의 복합키 RankCompositeKeyDTO를 리턴합니다.
+     *
+     * @param dto DB에 업데이트할 관광 순위를 가지고 있는 RankDTO
+     * @return  DB에 업데이트 한 Entity의 복합키 RankCompositeKeyDTO를 리턴
+     */
     private RankCompositeKeyDTO saveDb(RankDTO dto) {
         RankEntity entity = dtoToEntity(dto);
         log.info("entity: {}", entity);
@@ -223,6 +280,11 @@ public class RankDataApiServiceImpl implements RankDataApiService {
             .build();
     }
 
+    /**
+     * 날씨 api와 대기 api를 호출하여 Rank Data를 DB에 업데이트하고 ResultDTO<List<RankCompositeKeyDTO>>를 리턴
+     *
+     * @return Rank Data를 DB에 업데이트하고 ResultDTO<List<RankCompositeKeyDTO>>를 리턴, 그렇지 않으면 예외 처리
+     */
     // 날씨 rankWeatherData를 api를 호출하여 받아와서 RankData DB 업데이트
     @Override
     public ResultDTO<List<RankCompositeKeyDTO>> updateRankData() {

@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+/**
+ * 대기 실시간 api를 호출하여 받아온 DTO
+ */
 public class RankAirDTO {
 
     // 측정소명

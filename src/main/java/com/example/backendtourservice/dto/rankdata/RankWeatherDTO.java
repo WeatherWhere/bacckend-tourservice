@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+/**
+ * 날씨 단기예보 api를 호출하여 받아온 DTO
+ */
 public class RankWeatherDTO {
     private String level1;
     private String level2;

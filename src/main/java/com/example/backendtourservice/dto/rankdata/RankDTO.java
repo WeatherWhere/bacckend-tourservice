@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+/**
+ * 날씨 관광 지수와 대기 지수를 포함하는 순위를 매길 때 사용할 Rank DTO
+ */
 public class RankDTO {
     private String level1;
     private String level2;

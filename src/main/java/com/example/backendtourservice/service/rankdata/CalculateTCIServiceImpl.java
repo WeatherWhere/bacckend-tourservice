@@ -13,7 +13,12 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class CalculateTCIServiceImpl implements CalculateTCIService {
 
-    // 열쾌적성 지수
+    /**
+     * 온도와 습도로 계산한 열지수 Double 값을 리턴합니다.
+     * @param T 온도
+     * @param RH 습도
+     * @return 열지수 HI, Double 값을 리턴
+     */
     private Double calculateHI(Double T, Double RH) {
         // 섭씨 온도 -> 화씨 온도
         T = T * 1.8 + 32;
@@ -36,6 +41,12 @@ public class CalculateTCIServiceImpl implements CalculateTCIService {
         return (HI - 32) * 5 / 9;
     }
 
+    /**
+     * 열지수 HI 값으로 열쾌적성 지수, Double 값을 리턴합니다.
+     *
+     * @param HI 열지수
+     * @return 열쾌적성 지수, Double 값을 리턴
+     */
     private Double getHNOrHD(Double HI) {
         Double result = 0.0;
 
@@ -63,6 +74,14 @@ public class CalculateTCIServiceImpl implements CalculateTCIService {
         return result;
     }
 
+
+    /**
+     * 열쾌적지수(한낮 열쾌적지수, 일평균 열쾌적지수) 값으로 열쾌적 지수 등급 조회하여 String[] 리턴합니다.
+     *
+     * @param HN 한낮 열쾌적지수
+     * @param HD 일평균 열쾌적지수
+     * @return 열쾌적지수 값으로 등급들을 조회한다면 String[] 리턴
+     */
     private String[] getHNAndHDGrade(Double HN, Double HD) {
         String [] result = new String[2];
         // HN
@@ -78,7 +97,12 @@ public class CalculateTCIServiceImpl implements CalculateTCIService {
         return result;
     }
 
-    // 바람 지수 W 구하기
+    /**
+     * 6~18시 평균 풍속을 사용하여 바람 지수 W를 구하여 Double를 리턴합니다.
+     *
+     * @param WS 6~18시 평균 풍속
+     * @return 6~18시 평균 풍속을 사용하여 바람 지수 W를 구하여 Double를 리턴
+     */
     private Double getW(Double WS) {
         Double result = 0.0;
 
@@ -95,7 +119,12 @@ public class CalculateTCIServiceImpl implements CalculateTCIService {
         return result;
     }
 
-    // 바람지수 W 등급
+    /**
+     * 바람지수 W로 바람 지수 등급 조회하여 String을 리턴합니다.
+     *
+     * @param W 바람지수
+     * @return W로 조회한 바람 지수 등급 String을 리턴
+     */
     private String getWGrade(Double W) {
         String result = "";
 
@@ -106,7 +135,13 @@ public class CalculateTCIServiceImpl implements CalculateTCIService {
         return result;
     }
 
-    // 강수 R 구하기
+
+    /**
+     * 6~18시 누적 강수량을 사용하여 강수 지수 R을 구하여 Double를 리턴합니다.
+     *
+     * @param R  6~18시 누적 강수량
+     * @return  6~18시 누적 강수량을 사용하여 강수 지수 R값 Double를 리턴
+     */
     private Double getR(Double R) {
         Double result = 0.0;
 
@@ -121,7 +156,13 @@ public class CalculateTCIServiceImpl implements CalculateTCIService {
         return result;
     }
 
-    // 강수지수 R 등급
+
+    /**
+     * 강수지수 R로 강수지수 등급 조회하여 String을 리턴합니다.
+     *
+     * @param R 강수지수
+     * @return 강수지수 R로 조회한 강수지수 등급 String을 리턴
+     */
     private String getRGrade(Double R) {
         String result = "";
 
@@ -132,7 +173,12 @@ public class CalculateTCIServiceImpl implements CalculateTCIService {
         return result;
     }
 
-    // 일사지수 SI 구하기
+    /**
+     * 6~18시 일평균 운량을 사용하여 일사지수 SI를 구하여 Double를 리턴합니다.
+     *
+     * @param SI 6~18시 일평균 운량
+     * @return  6~18시 일평균 운량을 사용하여 일사 지수 SI값 Double를 리턴
+     */
     private Double getSI(Double SI) {
         Double result = 0.0;
         // 1, 3, 4 코드 값을 운량으로 변환
@@ -150,7 +196,12 @@ public class CalculateTCIServiceImpl implements CalculateTCIService {
         return result;
     }
 
-    // 일사지수 SI 등급
+    /**
+     * 일사지수 SI로 일사지수 등급 조회하여 String을 리턴합니다.
+     *
+     * @param SI 일사지수
+     * @return 일사지수 SI로 조회한 일사지수 등급 String을 리턴
+     */
     private String getSIGrade(Double SI) {
         String result = "";
 
@@ -161,12 +212,26 @@ public class CalculateTCIServiceImpl implements CalculateTCIService {
         return result;
     }
 
-    // TCI 관광기후지수 구하기
+    /**
+     * 날씨 데이터를 가공한 값으로 TCI 값을 리턴합니다.
+     * @param HN 한낮 열쾌적지수
+     * @param HD 일평균 열쾌적지수
+     * @param W 바람지수
+     * @param R 강수지수
+     * @param SI 일사지수
+     * @return 날씨 데이터를 가공한 값으로 TCI 값 Double 리턴
+     */
     private Double getTCI(Double HN, Double HD, Double W, Double R, Double SI) {
         return -1.91 + (0.09 * HN) + (0.08 * HD) + (0.12 * W) + (0.13 * R) + (0.09 * SI);
     }
 
-    // TCI 등급
+
+    /**
+     * TCI 값으로 조회한 TCI 등급을 리턴합니다.
+     *
+     * @param TCI 관광기후지수 값
+     * @return 관광기후지수 값 TCI로 조회한 TCO 등급 값 String 리턴
+     */
     private String getTCIGrade(Double TCI) {
         if (TCI >= 0.35) return "매우좋음";
         else if (TCI >= 0.1) return "좋음";
@@ -176,6 +241,12 @@ public class CalculateTCIServiceImpl implements CalculateTCIService {
     }
 
 
+    /**
+     * rank 날씨 데이터 rankWeatherDTO를 Rank 데이터로 가공하여 RankDTO를 리턴합니다.
+     *
+     * @param rankWeatherDTO rank 날씨 데이터
+     * @return rankWeatherDTO를 Rank 데이터로 가공한 RankDTO를 리턴
+     */
     @Override
     public RankDTO makeRankData(RankWeatherDTO rankWeatherDTO) {
         Double HN_HI = calculateHI(rankWeatherDTO.getMaxTmp(), rankWeatherDTO.getMinReh());

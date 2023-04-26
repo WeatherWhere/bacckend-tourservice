@@ -44,7 +44,7 @@ public class TourController {
      * @return 지역코드, 시군구코드, 콘텐츠타입 아이디를 받아서 해당하는 관광 정보를 리턴, 없을 시 예외처리
      */
     @GetMapping("/dbdata")
-    public ResponseEntity<List<TourDTO>> getTourDBData(@RequestParam Integer areaCode, @RequestParam Integer sigunguCode, @RequestParam Long contentTypeId) {
+    public ResponseEntity<List<TourDTO>> getTourDBData(@RequestParam Integer areaCode, @RequestParam Integer sigunguCode, @RequestParam Integer contentTypeId) {
         List<TourDTO> tourList = (List<TourDTO>) tourService.getTourDBData(areaCode, sigunguCode, contentTypeId);
         return ResponseEntity.ok(tourList);
     }
@@ -58,7 +58,7 @@ public class TourController {
      * @throws org.json.simple.parser.ParseException
      */
     @GetMapping("/detail")
-    public Object getDetailInfo(@RequestParam Long contentId, @RequestParam Long contentTypeId) throws org.json.simple.parser.ParseException {
+    public Object getDetailInfo(@RequestParam Long contentId, @RequestParam Integer contentTypeId) throws org.json.simple.parser.ParseException {
         return tourService.getDetailInfo(contentId, contentTypeId);
     }
 
@@ -71,7 +71,7 @@ public class TourController {
      * @throws org.json.simple.parser.ParseException
      */
     @GetMapping("/common")
-    public Object getCommonInfo(@RequestParam Long contentId, @RequestParam Long contentTypeId) throws org.json.simple.parser.ParseException {
+    public Object getCommonInfo(@RequestParam Long contentId, @RequestParam Integer contentTypeId) throws org.json.simple.parser.ParseException {
         return tourService.getCommonInfo(contentId, contentTypeId);
     }
 

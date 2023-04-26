@@ -15,7 +15,7 @@ public class TourEntity {
     @Column(name = "tour_id")
     private long contentId;
     @Column (name = "content_type_id")
-    private long contentTypeId;
+    private int contentTypeId;
     @Column(name = "region_code")
     private int areaCode;
     @Column(name = "sigungu_code")

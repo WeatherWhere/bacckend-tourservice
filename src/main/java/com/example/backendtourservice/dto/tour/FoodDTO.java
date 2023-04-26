@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+/**
+ * 소개정보 음식점 데이터를 DTO로 생성
+ */
 public class FoodDTO {
     private String chkCreditCardFood;
     private String discountInfoFoof;

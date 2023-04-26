@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+/**
+ * 소개정보 관광지 데이터를 DTO로 생성
+ */
 public class TouristSpotDTO {
     private String chkBabyCarriage;
     private String chkCreditCard;

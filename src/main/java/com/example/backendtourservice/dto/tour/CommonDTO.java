@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+/**
+ * 공통정보 데이터를 DTO로 생성
+ */
 public class CommonDTO {
     private String homePage;
     private String overView;

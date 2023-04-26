@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+/**
+ * DB에 조회하거나 저장할 관광 정보 DTO
+ */
 public class TourDTO {
     private long contentId;
     private long contentTypeId;

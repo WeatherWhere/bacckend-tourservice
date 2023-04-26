@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+/**
+ * 소개정보 문화시설 데이터를 DTO로 생성
+ */
 public class CultureDTO {
     private String chkBabyCarriageCulture;
     private String chkCreditCardCulture;

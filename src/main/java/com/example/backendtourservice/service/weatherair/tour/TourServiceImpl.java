@@ -21,7 +21,11 @@ import java.util.NoSuchElementException;
 public class TourServiceImpl implements TourService {
     private final TourRepository tourRepository;
 
-    // 지역기반 광관정보 api url
+    /**
+     * 지역기반 관광정보 Open API URL를 String으로 리턴하는 메서드
+     *
+     * @return url(지역기반 관광정보 Open API URL)
+     */
     private String makeUrl() {
         String BASE_URL = "http://apis.data.go.kr/B551011/KorService1/areaBasedList1";
         String serviceKey = "?ServiceKey="+System.getProperty("TOUR_SERVICE_KEY");
@@ -37,7 +41,13 @@ public class TourServiceImpl implements TourService {
         return url;
     }
 
-    // 소개정보 api url
+    /**
+     * 소개정보 Open API URL를  String으로 리턴하는 메서드
+     *
+     * @param contentid 콘텐츠 아이디
+     * @param contenttypeid 콘텐츠타입 아이디
+     * @return url2(소개정보 Open API URL)
+     */
     private String makeUrl2(long contentid, long contenttypeid) {
         String BASE_URL = "http://apis.data.go.kr/B551011/KorService/detailIntro";
         String serviceKey = "?ServiceKey="+System.getProperty("TOUR_SERVICE_KEY");
@@ -53,7 +63,13 @@ public class TourServiceImpl implements TourService {
         return url2;
     }
 
-    //공통정보 api url
+    /**
+     * 공통정보 Open API URL을 String으로 리턴하는 메서드
+     *
+     * @param contentid 콘텐츠 아이디
+     * @param contenttypeid 콘텐츠타입 아이디
+     * @return url3(공통정보 Open API URL)
+     */
     private String makeUrl3(long contentid, long contenttypeid) {
         String BASE_URL = "http://apis.data.go.kr/B551011/KorService/detailCommon";
         String serviceKey = "?ServiceKey="+System.getProperty("TOUR_SERVICE_KEY");
@@ -71,7 +87,13 @@ public class TourServiceImpl implements TourService {
         return url3;
     }
 
-    //JSON 파싱
+    /**
+     * Open API로부터 받아온 JSON 문자열을 JSON으로 파싱하는 메서드로 JSONArray로 리턴
+     *
+     * @param jsonString Open API를 통해 받아오는 JSON 형태의 문자열
+     * @return response.body.items.item을 List로 리턴
+     * @throws ParseException
+     */
     private JSONArray jsonParser(String jsonString) throws ParseException {
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(jsonString);
@@ -83,7 +105,12 @@ public class TourServiceImpl implements TourService {
         return itemList;
     }
 
-    //Open API에서 데이터 받아오고 파싱
+    /**
+     * makeUrl 메서드로 만들어진 url을 통해서 지역기반 광관정보 Open API를 호출하고 jsonParser 메서드를 통해서 파싱하고 리턴하는 메서드
+     *
+     * @return 지역기반 관광정보 result
+     * @throws ParseException
+     */
     @Override
     //지역기반 관광정보
     public Object getTourData() throws ParseException {
@@ -93,7 +120,16 @@ public class TourServiceImpl implements TourService {
         Object result = jsonParser(jsonString);
         return result;
     }
-    //소개정보
+
+    /**
+     * makeUrl2 메서드로 만들어진 url를 통해서 소개정보 Open API를 호출하고 jsonParser 메서드를 통해서 파싱,
+     * 콘텐츠 아이디에 해당하는 관광 정보를 콘텐츠타입 아이디 타입에 따라 다른게 소개정보를 리턴
+     *
+     * @param contentId 콘텐츠 아이디
+     * @param contentTypeId 콘텐츠타입 아이디
+     * @return dto(콘텐츠타입에 따른 콘텐츠 아이디에 해당하는 관광지의 소개정보)
+     * @throws ParseException
+     */
     @Override
     public Object getDetailInfo(Long contentId, Long contentTypeId) throws ParseException {
         RestTemplate  restTemplate = new RestTemplate();
@@ -175,6 +211,13 @@ public class TourServiceImpl implements TourService {
         return dto;
     }
 
+    /**
+     * 소개정보 builder 사용되는 메서드, Open API에서 데이터가 빈 값으로 올때 String으로 "정보가 없습니다." 리턴,
+     * 빈 값이 아닐때는 받아온 데이토 값을 String으로 리턴
+     *
+     * @param value
+     * @return value(데이터가 빈 값일 때는 "정보가 없습니다.", 빈값이 아닐때는 받아온 데이터의 값)
+     */
     private String parseEmptyString(Object value) {
         if (value instanceof String) {
             String strValue = (String) value;
@@ -187,6 +230,13 @@ public class TourServiceImpl implements TourService {
         return (String) value;
     }
 
+    /**
+     * 소개정보 builder 사용되는 메서드, Open API에서 받아온 데이터가 1이면 String으로 "있음" 리턴,
+     * 0이면 String으로 "없음" 리턴
+     *
+     * @param value
+     * @return value(데이터가 1일 때는 "있음", 0일때는 "없음")
+     */
     private String parseInt(Object value) {
         if (value instanceof String) {
             String strValue = (String) value;
@@ -199,7 +249,15 @@ public class TourServiceImpl implements TourService {
         return (String) value;
     }
 
-    //공통정보
+    /**
+     * makeUrl3 메서드로 만들어진 url를 통해서 공통정보 Open API를 호출하고 jsonParser 메서드를 통해서 파싱,
+     * 콘텐츠 아이디와 콘텐츠타입 아이디에 따른 관광지의 공통정보를 CommonDTO 로 리턴
+     *
+     * @param contentId 콘텐츠 아이디
+     * @param contentTypeId 콘텐츠타입 아이디
+     * @return dto(콘텐츠 아이디와 콘텐츠타입 아이디에 따른 관광지의 공통정보 CommonDTO) 리턴
+     * @throws ParseException
+     */
     @Override
     public CommonDTO getCommonInfo(Long contentId, Long contentTypeId) throws ParseException {
         RestTemplate restTemplate = new RestTemplate();
@@ -214,9 +272,15 @@ public class TourServiceImpl implements TourService {
         return dto;
     }
 
+    /**
+     * Open API를 통해서 받아온 데이터를 itemList의 수만큼 for문을 통해 DB에 저장,
+     * 예외 발생시 숫자 데이터에는 0을 저장하고 문자열 데이터에는 값을 안넣고 저장하는 메서드
+     *
+     * @return DB에 저장을 완료했다는 "성공" 리턴
+     * @throws ParseException
+     */
     @Override
-    //받아온 데이터 DB에 저장
-    public Object saveTourData() throws java.text.ParseException, ParseException {
+    public Object saveTourData() throws ParseException {
         JSONArray itemList = (JSONArray) getTourData();
 
         for (Object obj : itemList){
@@ -264,7 +328,14 @@ public class TourServiceImpl implements TourService {
 
     }
 
-    // DB에서 입력한 지역코드, 시군구코드, 콘텐츠타입아이디와 일치하는 관광 데이터 가져오기
+    /**
+     * 지역코드, 시군구코드, 콘텐츠타입 아이디와 일치하는 관광 데이터를 DB에서 List<TourEntity> 로 리턴
+     *
+     * @param areaCode 지역코드
+     * @param sigunguCode 시군구코드
+     * @param contentTypeId 콘텐츠타입 아이디
+     * @return tourList(관광 데이터 List<TourEntity>) 리턴
+     */
     @Override
     public List<TourEntity> getTourDBData(Integer areaCode, Integer sigunguCode, Long contentTypeId) {
         List<TourEntity> tourList = tourRepository.findByAreaCodeAndSigunguCodeAndContentTypeId(areaCode, sigunguCode, contentTypeId);

@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+/**
+ * 소개정보 숙박 데이터를 DTO로 생성
+ */
 public class LodgingDTO {
     private String checkinTime;
     private String checkoutTime;
